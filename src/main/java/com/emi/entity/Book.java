@@ -2,6 +2,8 @@ package com.emi.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.emi.enums.BookFormat;
 import com.emi.enums.BookLanguage;
@@ -21,19 +23,17 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @Entity
-@XmlRootElement
 public class Book {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private Long book_Id;
+	private Long book_id;
 	
 	private String bookTitle;
 	
@@ -49,13 +49,13 @@ public class Book {
 	
 	//making a join table where the owner is book 
 	//with join columns and inverse join columns
+	@ManyToMany(cascade=CascadeType.MERGE , fetch=FetchType.LAZY)
 	@JoinTable(
-		name="book_genre" ,
-		joinColumns=@JoinColumn(name ="book_Id"),
-		inverseJoinColumns=@JoinColumn(name="genre_Id")
+		name="bookgenre" ,
+		joinColumns=@JoinColumn(name ="book_id"),
+		inverseJoinColumns=@JoinColumn(name="genre_id")
 	)
-	@ManyToMany
-	private BookGenre genres;
+	private Set<BookGenre> genres = new HashSet<>();
 	
 	private BigDecimal bookPriceDigital;
 	
@@ -69,8 +69,8 @@ public class Book {
 	
 	
 	@ManyToOne(cascade=CascadeType.MERGE , fetch=FetchType.LAZY)
-	@JoinColumn(name = "author_Id" , unique =true , nullable =false)
-	private Author bookbuthor;
+	@JoinColumn(name = "author_id" , unique =true , nullable =false)
+	private Author bookAuthor;
 	
 	//from cloud
 	private String coverImageUrl;

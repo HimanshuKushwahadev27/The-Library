@@ -14,14 +14,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
-@XmlRootElement
+
 public class Membership {
 
 	@Id
@@ -43,7 +42,7 @@ public class Membership {
 	
 	//optional ensures that every user must always have membership
 	@OneToOne(cascade=CascadeType.MERGE , fetch=FetchType.LAZY , optional = false)
-	@JoinColumn(name = "user_Id")
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	

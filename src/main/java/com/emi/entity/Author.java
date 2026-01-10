@@ -6,21 +6,27 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
-@XmlRootElement
 public class Author {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long authorId;
 	
-	private String authorName;
+	@OneToOne
+	@JoinColumn(name="user_id" , nullable=false , unique=true)
+	private User user;
+	
+	private String firstName;
+	
+	private String lastName;
 	
 	private String bio;
 	

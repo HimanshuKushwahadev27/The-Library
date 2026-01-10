@@ -1,5 +1,6 @@
 package com.emi.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.CascadeType;
@@ -8,15 +9,14 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
 @Data
-@XmlRootElement
 public class BookContent {
 
 	@Id
@@ -26,7 +26,13 @@ public class BookContent {
 	@ManyToOne(cascade=CascadeType.MERGE , fetch=FetchType.LAZY)
 	private Book book;
 	
-	private int chapterNumber;
+	
+	private BigDecimal price;
+	
+	@Lob
+	private String content;
+	
+	private Integer chapterNumber;
 	
 	private String title;
 	

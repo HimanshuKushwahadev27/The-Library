@@ -9,13 +9,12 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@XmlRootElement
 @NoArgsConstructor
 @Entity
 public class BorrowRecord {
@@ -24,9 +23,11 @@ public class BorrowRecord {
 	private Long id;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="user_id")
 	private User user;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="book_id")
 	private Book book;
 	
 	private LocalDateTime borrowDate;
