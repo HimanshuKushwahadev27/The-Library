@@ -3,5 +3,6 @@ package com.emi.enums;
 public enum Role {
        ADMIN,
        LIBRARIAN,
-       USER ;
+       USER, 
+       AUTHOR;
 }

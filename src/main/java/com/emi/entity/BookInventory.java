@@ -20,7 +20,7 @@ public class BookInventory {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private int bookInventory_Id;
+	private Long bookInventory_Id;
 	
 	
 	//one book occupies only one row in the book inventory record 

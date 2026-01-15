@@ -21,6 +21,9 @@ public class AuditLog {
 	
 	private Long userId;
 	
+	@Column(nullable=false)
+	private String userRole;
+	
 	//what type of action performed create book , buy book ,del book etc
 	@Column(nullable=false)
 	private String action;
@@ -28,6 +31,13 @@ public class AuditLog {
 	//which entity performs
 	@Column(nullable=false)
 	private String entity;
+	
+	//id of the affected entity
+	@Column(nullable=false)
+	private Long entityId;
+	
+	//changes made 
+	private String description ;
 	
     private LocalDateTime timestamp;
 

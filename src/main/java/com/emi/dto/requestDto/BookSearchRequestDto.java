@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @XmlRootElement
 @Data
 @NoArgsConstructor
-@Schema(description="Request Book DTO")
-public class RequestBookDto {
-
+@Schema(description="Search Book DTO")
+public class BookSearchRequestDto {
+	
 	@Schema(example="Essential of Life" , description="Title of the book")
 	private String bookTitle;
 	
@@ -41,4 +41,5 @@ public class RequestBookDto {
 	@Schema(example="Physical" , description="Is the book is in Physical or Virtual format")
 	private BookFormat format;
  
+
 }
