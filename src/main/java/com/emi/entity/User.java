@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import com.emi.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,7 +26,7 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private Long userid;
+	private Long user_id;
 	
 	private String firstName;
 	
@@ -49,8 +48,13 @@ public class User {
 	
 	private LocalDateTime createdAt;
 	
+	private boolean isAccountNonLocked;
+	
+	private LocalDateTime passwordExpireDate;
+	
 	private LocalDateTime updatedAt;
 	
-	@OneToOne(mappedBy="user" , cascade=CascadeType.MERGE , fetch=FetchType.LAZY)
+	@OneToOne(mappedBy="user" , fetch=FetchType.LAZY)
 	private Membership membership;
+	
 }

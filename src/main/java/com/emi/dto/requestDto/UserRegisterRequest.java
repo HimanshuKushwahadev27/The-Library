@@ -16,11 +16,11 @@ public class UserRegisterRequest {
 
 	@Schema(example="John" , description="firstname")
 	@NotBlank(message="enter the firstname")
-	private String firstName;
+	private String firstname;
 	
 	@Schema(example="Doe" , description="lastname")
 	@NotBlank(message="enter the lastname")
-	private String lastName;
+	private String lastname;
 	
 	@Schema(example="xyz354@gmail.com" , description="Email id")
     @Email(message = "Invalid email format")

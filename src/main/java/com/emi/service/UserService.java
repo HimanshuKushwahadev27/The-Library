@@ -5,11 +5,12 @@ import java.util.List;
 
 import com.emi.dto.requestDto.UserRegisterRequest;
 import com.emi.entity.User;
+import com.emi.enums.Role;
 
 public interface UserService {
 	
-	public User createUSer(UserRegisterRequest user);
-	public User createUserById(Long id);
+	public void createUser(UserRegisterRequest user);
+	public void createAuthorByUserId(Long id , Role role);
 	public List<User> getAllUser();
 	public User updateUser(Long id , User user);
 	public void deleteUSer(Long id);

@@ -31,10 +31,11 @@ public class BookContent {
 	private Long bookContent_Id;
 	
 	@ManyToOne( fetch=FetchType.LAZY)
+	@JoinColumn(name = "book_id")
 	private Book book;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	private BigDecimal price;
