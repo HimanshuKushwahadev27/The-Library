@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.emi.Repo.TokenRepo;
 import com.emi.service.Impl.JwtService;
 
 import jakarta.servlet.FilterChain;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+	private final TokenRepo tokenRepo;
 	private final JwtService jwtService;
 	private final UserDetailsService userDetailsService;
 	
@@ -45,7 +47,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		if(userName!=null && SecurityContextHolder.getContext().getAuthentication()==null) {
 			UserDetails userDetails=this.userDetailsService.loadUserByUsername(userName);
 			
-			if(jwtService.isTokenValid(jwt, userDetails)) {
+			var tokenValid=tokenRepo.findByToken(jwt)
+					.map(t -> t.isExpired() && t.isRevoked())
+					.orElse(false);
+			
+			if(jwtService.isTokenValid(jwt, userDetails) && tokenValid ) {
 				//token is valid then authenticate the use
 				UsernamePasswordAuthenticationToken auth=new UsernamePasswordAuthenticationToken(
 						userDetails,
