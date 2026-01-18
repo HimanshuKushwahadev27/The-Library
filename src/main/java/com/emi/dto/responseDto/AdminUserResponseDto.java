@@ -5,14 +5,18 @@ import java.time.LocalDateTime;
 import com.emi.entity.Membership;
 import com.emi.enums.Role;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Data
-@XmlRootElement
+@AllArgsConstructor
 @NoArgsConstructor
-public class AdminResponseDto {
+public class AdminUserResponseDto {
+	
 
 	private Long id;
 	private String firstname;
@@ -24,6 +28,7 @@ public class AdminResponseDto {
 	private Role role;
 	
 	private boolean enabled;
+	private boolean isAccountNonLocked;
 	
 	private LocalDateTime joinedAt;
 	private LocalDateTime updateAt;
