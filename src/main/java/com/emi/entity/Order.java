@@ -27,37 +27,37 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Table(name="orders")
-public class Order {
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private Long orderid;
+	public class Order {
 	
-	@Enumerated(EnumType.STRING)
-	private OrderType ordertype;
+		@Id
+		@GeneratedValue(strategy=GenerationType.SEQUENCE)
+		private Long orderid;
+		
+		@Enumerated(EnumType.STRING)
+		private OrderType ordertype;
+		
+		//many order for a user
+		@ManyToOne
+		@JoinColumn(name="user_id"  , nullable=false)
+		private User user;
+		
+	    //essentially manytomany relation between user and books as we have additional info so we use order entity
 	
-	//many order for a user
-	@ManyToOne
-	@JoinColumn(name="user_id"  , nullable=false)
-	private User user;
+		
+		//one order contain multiple book content
+		//one book content can be ordered by multiple users
+		@OneToMany(mappedBy="order",fetch=FetchType.LAZY , cascade=CascadeType.ALL)
+		private Set<UserBookContent> purchasedContent = new HashSet<>();
+		
+		
+		private BigDecimal totalAmt;
+		
+		@Enumerated(EnumType.STRING)	
+		private OrderStatus status;
+		
+		//one order contain multiple book content
+		//one book content can be ordered by multiple users
 	
-    //essentially manytomany relation between user and books as we have additional info so we use order entity
-
-	
-	//one order contain multiple book content
-	//one book content can be ordered by multiple users
-	@OneToMany(mappedBy="order",fetch=FetchType.LAZY , cascade=CascadeType.ALL)
-	private Set<UserBookContent> purchasedContent = new HashSet<>();
-	
-	
-	private BigDecimal totalAmt;
-	
-	@Enumerated(EnumType.STRING)	
-	private OrderStatus status;
-	
-	//one order contain multiple book content
-	//one book content can be ordered by multiple users
-
-	
-	private LocalDateTime createdAt;
-}
+		
+		private LocalDateTime createdAt;
+	}

@@ -39,6 +39,11 @@ public class UserBookContent {
      @ManyToOne(fetch=FetchType.LAZY)
      @JoinColumn(name="order_id")
      private Order order;
+     
+     
+     @ManyToOne(fetch = FetchType.LAZY)
+     @JoinColumn(name = "user_id", nullable = false)
+     private User user;
 
      //so essentially manytomany mapping between user and bookcontent as the relationship contains extra information
      private BigDecimal itemPrice;

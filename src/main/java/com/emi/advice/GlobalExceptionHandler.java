@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.emi.exceptions.InvalidRegistrationDataException;
 import com.emi.exceptions.RoleNotAllowedException;
 import com.emi.exceptions.UserAlreadyExistsException;
+import com.emi.exceptions.UserNotExistException;
 
 
 @RestControllerAdvice
@@ -69,11 +70,26 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(RoleNotAllowedException .class)
-	public ResponseEntity<?> handleBadCredentials(RoleNotAllowedException  ex){
+	public ResponseEntity<?> handleRoleNotAllowed(RoleNotAllowedException  ex){
 		return  ResponseEntity
 				.status(HttpStatus.FORBIDDEN)
 				.body(ex.getMessage());
 	}
+	
+	@ExceptionHandler(UserNotExistException.class)
+	public ResponseEntity<?> handleUserNotExistException(UserNotExistException  ex){
+		return  ResponseEntity
+				.status(HttpStatus.NOT_FOUND)
+				.body(ex.getMessage());
+	}
+	
+	@ExceptionHandler(IllegalStateException.class)
+	public ResponseEntity<?> handleIllegalState(IllegalStateException  ex){
+		return  ResponseEntity
+				.status(HttpStatus.BAD_REQUEST)
+				.body(ex.getMessage());
+	}
+	
 	
 	
 }

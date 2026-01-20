@@ -38,7 +38,7 @@ public class AuthController {
 			produces={"application/json" , "application/xml"}  , 
 			consumes={"application/json" , "application/xml"} 
 			)
-	public ResponseEntity<AuthenticateResponse> Login(@RequestBody LoginRequest request){
+	public ResponseEntity<AuthenticateResponse> Login(@RequestBody @Valid LoginRequest request){
 		return ResponseEntity.ok(authService.authenticateUser(request));
 	}
 }

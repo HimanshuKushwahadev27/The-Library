@@ -2,6 +2,7 @@ package com.emi.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import com.emi.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -53,14 +54,22 @@ public class User {
 	
 	private boolean isAccountNonLocked;
 	
+	private boolean deletedUser;
+	
 	private LocalDateTime passwordExpireDate;
+	
+	private LocalDateTime deletedDate;
+
 	
 	private LocalDateTime updatedAt;
 	
 	@OneToOne(mappedBy="user" , fetch=FetchType.LAZY)
 	private Membership membership;
 	
-	@OneToMany(mappedBy="user" , fetch=FetchType.LAZY , cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy="user" , fetch=FetchType.LAZY , cascade=CascadeType.ALL)
 	private List<Token> token;
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	private Set<UserBookContent> purchasedContents;
 	
 }

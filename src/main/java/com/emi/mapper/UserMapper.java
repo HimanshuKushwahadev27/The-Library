@@ -1,18 +1,23 @@
 package com.emi.mapper;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
 import com.emi.dto.responseDto.AdminUserResponseDto;
+import com.emi.dto.responseDto.ResponseUserDto;
 import com.emi.entity.Membership;
 import com.emi.entity.User;
 import com.emi.enums.PaidAccess;
 
+
 @Component
 public class UserMapper {
 
-	private Membership getDefaultMembership() {
+	public Membership getDefaultMembership() {
 		return Membership.builder()
 				.accessType(PaidAccess.FREE)
 				.autoRenew(true)
@@ -22,7 +27,7 @@ public class UserMapper {
 				.build();
 	}
 	
-	private AdminUserResponseDto toAdminDto(User user) {
+	public AdminUserResponseDto toAdminDto(User user) {
 		return AdminUserResponseDto
 				.builder()
 				.email(user.getEmail())
@@ -34,6 +39,23 @@ public class UserMapper {
 				.membership(user.getMembership())
 				.updateAt(user.getUpdatedAt())
 				.joinedAt(user.getCreatedAt())
-				.role(user.getRole());
+				.role(user.getRole())
+				.build();
 	}
+
+	public ResponseUserDto toUserProfile(User user) {
+		// TODO Auto-generated method stub
+		return ResponseUserDto
+				.builder()
+				.email(user.getEmail())
+				.name(Stream.of(user.getFirstName() , user.getLastName())
+						.filter(Objects::nonNull)
+						.collect(Collectors.joining(" ")))
+				.joinedAt(user.getCreatedAt())
+				.role(user.getRole())
+				.membership(user.getMembership())
+				.build()
+				;
+	}
+	
 }
