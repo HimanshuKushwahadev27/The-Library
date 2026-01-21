@@ -1,6 +1,5 @@
 package com.emi.service;
 
-import com.emi.entity.UserBookContent;
 
 import java.util.List;
 import java.util.Set;
@@ -9,7 +8,7 @@ import com.emi.dto.responseDto.ResponseUserBookContentDto;
 public interface UserBookContentService {
 
 	//recording a purchased content
-    UserBookContent purchaseSingleContent( String email, Long orderId);
+	List<ResponseUserBookContentDto> purchaseSingleContent( String email, Long contentId );
 
     //get all purchase content for the user
     List<ResponseUserBookContentDto> getPurchasedContentsByUser(String email);

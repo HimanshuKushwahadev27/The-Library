@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Schema(description="purchas content multiple")
-public class PurchaseContentRequest {
+public class PurchaseMultipleContentRequest {
 	
     @NotEmpty(message = "Content list cannot be empty")
     private Set<Long> contentIds;

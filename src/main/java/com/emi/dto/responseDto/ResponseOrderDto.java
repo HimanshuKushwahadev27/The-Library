@@ -2,16 +2,20 @@ package com.emi.dto.responseDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 import com.emi.enums.OrderStatus;
 import com.emi.enums.OrderType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
+@AllArgsConstructor
 @Data
 @NoArgsConstructor
 @XmlRootElement
@@ -27,7 +31,7 @@ public class ResponseOrderDto {
 	@Schema(example="Virtual" , description="Hard copy or Soft copy")
 	private OrderType type;
 	
-	@Schema(example="Rs. 24.90" , description="Price paid during plaind order")
+	@Schema(example="Rs. 24.90" , description="Price paid during placing order")
 	private BigDecimal pricePaid;
 	
 	@Schema(example="Time" , description="Date at which order was placed")
@@ -37,15 +41,6 @@ public class ResponseOrderDto {
 	private OrderStatus status;
 	
 	@Schema(description="Chapters purchased by the user")
-	private Set<ChapterOrderInfo> purchasedChapter;
-	
-	@Data
-	@NoArgsConstructor
-	public static class ChapterOrderInfo{
-		
-		private Long OrderId;
-		private String chapterTitle;
-		private BigDecimal pricepaid;
-	}
-	
+	private List<ResponseUserBookContentDto> purchasedChapter;
+
 }

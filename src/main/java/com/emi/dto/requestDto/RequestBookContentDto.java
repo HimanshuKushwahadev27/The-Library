@@ -12,32 +12,45 @@ import lombok.NoArgsConstructor;
 @XmlRootElement
 @Data
 @NoArgsConstructor
-@Schema(description="Request Book DTO")
+@Schema(description="Request Bookcontent DTO")
 public class RequestBookContentDto {
 
-	@Schema(example="765" , description="Id of the book content")
-	private Long bookContent_Id;
-	
-	@Schema(example="7635" , description="bookId of the book content")
-	private Long bookId;
-	
-	@Schema(example="75" , description="userId of the book content")
-	private Long userId;
-	
-	@Schema(example="765" , description="chapter number of the book content")
-	private Integer chapterNumber;
-	
-	@Schema(example="Welcome" , description="Title of the book content")
-	private String title;
-	
-	
-	private String content;
-	
-	private BigDecimal price;
-	
-	private Boolean draft;
-	
-	private String cloudUrl; 
+	       @Schema(
+		        example = "7635",
+		        description = "ID of the book to which this content belongs",
+		        required = true
+		    )
+		    private Long bookId;
+
+		    @Schema(
+		        example = "5",
+		        description = "Chapter number in the book",
+		        required = true
+		    )
+		    private Integer chapterNumber;
+
+		    @Schema(
+		        example = "Introduction to Spring",
+		        description = "Title of the chapter",
+		        required = true
+		    )
+		    private String title;
+
+		    @Schema(
+		        description = "Actual content or markdown text of the chapter"
+		    )
+		    private String content;
+
+		    @Schema(
+		        example = "199.00",
+		        description = "Price of this content"
+		    )
+		    private BigDecimal price;
+
+		    @Schema(
+		        example = "true",
+		        description = "Whether the content is saved as draft"
+		    )
+		    private Boolean draft;
 		
-	private LocalDateTime createdAt;
 }

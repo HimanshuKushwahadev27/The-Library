@@ -2,7 +2,6 @@ package com.emi.dto.requestDto;
 
 
 
-import java.time.LocalDateTime;
 
 import com.emi.enums.BookStatus;
 
@@ -18,8 +17,6 @@ import lombok.NoArgsConstructor;
 public class AdminRequestBorrowRecordDto {
 
 	
-	@Schema(example="414" , description="Search on the basis of user id")
-	private Long userId;
 	
 	@Schema(example="424" , description="Search on the basis of Book id")
 	private Long bookId;
@@ -27,10 +24,5 @@ public class AdminRequestBorrowRecordDto {
 	@Schema(description="Search on the basis of the book status")
 	private BookStatus status;
 	
-	@Schema(description="Start date")
-	private LocalDateTime fromDate;
-	
-	@Schema(description="End date")
-	private LocalDateTime toDate;
-	
+
 }

@@ -1,6 +1,6 @@
 package com.emi.dto.requestDto;
 
-import java.time.LocalDateTime;
+
 
 import com.emi.enums.BookStatus;
 
@@ -18,9 +18,4 @@ public class UserRequestBorrowRecord {
 	@Schema(example="Borrowed" , description="Status of the book")
 	private BookStatus status;
 	
-	@Schema(description="Start date")
-	private LocalDateTime fromDate;
-	
-	@Schema(description="End date")
-	private LocalDateTime toDate;
 }

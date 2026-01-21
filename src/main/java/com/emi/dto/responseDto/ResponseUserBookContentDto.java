@@ -3,14 +3,20 @@ package com.emi.dto.responseDto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.emi.enums.OrderStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class ResponseUserBookContentDto {
 
-	  private Long userBookContentId;
+	    private Long userBookContentId;
 	    private Long bookId;
 	    private String bookTitle;
 
@@ -21,5 +27,5 @@ public class ResponseUserBookContentDto {
 	    private BigDecimal pricePaid;
 
 	    private LocalDateTime purchasedAt;
-	    private String status;
+	    private OrderStatus status;
 }

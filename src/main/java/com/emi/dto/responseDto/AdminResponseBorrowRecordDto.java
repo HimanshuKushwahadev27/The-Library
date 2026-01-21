@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class ResponseBorrowRecordDto {
+public class AdminResponseBorrowRecordDto {
 
 	private String bookTitle;
 	
@@ -26,4 +26,10 @@ public class ResponseBorrowRecordDto {
 	private LocalDateTime returnDate;
 	
 	private BookStatus status;
+	
+	private Long userId;
+	
+	private Long bookId;
+	
+	
 }

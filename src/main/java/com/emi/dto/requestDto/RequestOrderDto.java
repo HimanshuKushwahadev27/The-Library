@@ -1,6 +1,5 @@
 package com.emi.dto.requestDto;
 
-import java.util.Set;
 
 import com.emi.enums.OrderType;
 
@@ -20,8 +19,6 @@ public class RequestOrderDto {
 	@NotNull
 	private Long book_Id;
 	
-	@Schema(example="12,43,23,13" , description="ID of the BookContent user wants to buy")
-	private Set<Long> chapterId;
 		
 	@Schema(example="Virtual" , description="Type of order physical or read online")
 	@NotNull

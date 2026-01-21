@@ -11,6 +11,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.emi.exceptions.ContentNotFoundException;
 import com.emi.exceptions.InvalidRegistrationDataException;
 import com.emi.exceptions.RoleNotAllowedException;
 import com.emi.exceptions.UserAlreadyExistsException;
@@ -87,6 +88,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleIllegalState(IllegalStateException  ex){
 		return  ResponseEntity
 				.status(HttpStatus.BAD_REQUEST)
+				.body(ex.getMessage());
+	}
+	
+	@ExceptionHandler(ContentNotFoundException.class)
+	public ResponseEntity<?> handleContentNotFound(ContentNotFoundException  ex){
+		return  ResponseEntity
+				.status(HttpStatus.NO_CONTENT)
 				.body(ex.getMessage());
 	}
 	

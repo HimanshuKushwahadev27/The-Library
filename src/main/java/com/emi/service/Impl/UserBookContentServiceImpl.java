@@ -1,14 +1,24 @@
 package com.emi.service.Impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.emi.Repo.BookContentRepo;
 import com.emi.Repo.OrderRepo;
+import com.emi.Repo.UserRepo;
 import com.emi.dto.responseDto.ResponseUserBookContentDto;
+import com.emi.entity.User;
+import com.emi.entity.BookContent;
 import com.emi.entity.UserBookContent;
+import com.emi.enums.OrderStatus;
+import com.emi.enums.OrderType;
+import com.emi.exceptions.ContentNotFoundException;
+import com.emi.exceptions.UserNotExistException;
+import com.emi.mapper.UBCMapper;
+import com.emi.service.OrderService;
 import com.emi.service.UserBookContentService;
 
 import lombok.RequiredArgsConstructor;
@@ -17,28 +27,73 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserBookContentServiceImpl implements UserBookContentService {
 
+	private final OrderService orderService;
+	private final UBCMapper ubcMapper;
+	private final UserRepo userRepo;
 	private final OrderRepo orderRepo;
+	private final BookContentRepo contentRepo;
+	
+	@Transactional
 	@Override
-	public UserBookContent purchaseContent(String email, Long contentOrderId) {
+	public List<ResponseUserBookContentDto> purchaseSingleContent( String email, Long contentId ) {
+		
+		User user=userRepo.
+				findByEmail(email)
+				.orElseThrow(() -> new UserNotExistException("Looks like you are not here") );
+		
+		var order=orderService.createOrder(
+				               OrderType.Virtual,
+                               OrderStatus.PLACED,
+                               user,
+                               Set.of(contentId)
+                               );
+                               
+        return order.getPurchasedContent().stream().map(ubcMapper::toUCBDto).toList();
+	}
+
+	@Transactional
+	@Override
+	public List<ResponseUserBookContentDto> getPurchasedContentsByUser(String email) {
+	
+		User user=userRepo.findByEmail(email)
+				          .orElseThrow(() -> new UserNotExistException("Looks like you are not here"));
+		
+		Set<UserBookContent> ubc=orderRepo.findAllPurchaseContentViaOrder(user.getUser_id());
+		
+		if(ubc==null) {
+			throw new ContentNotFoundException("No chapters purchased");
+		}
+		return ubc.stream().map(ubcMapper::toUCBDto).toList();
 		
 	}
 
+	@Transactional
 	@Override
-	public List<ResponseUserBookContentDto> getPurchasedContentsByUser(String email) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseUserBookContentDto getUserBookContent(String email, Long contentId) {
+		
+		User user=userRepo.findByEmail(email)
+		          .orElseThrow(() -> new UserNotExistException("Looks like you are not here"));
+		
+		UserBookContent ubc=orderRepo.findByUserIdAndContentId(user.getUser_id(), contentId);
+		if(ubc==null) {
+			throw new ContentNotFoundException("No chapters purchased yet");
+		}
+		
+		return ubcMapper.toUCBDto(ubc);
 	}
 
+	@Transactional
 	@Override
-	public Optional<ResponseUserBookContentDto> getUserBookContent(String email, Long contentId) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
-	}
-
-	@Override
-	public List<UserBookContent> purchaseMultipleContent(String email, Set<Long> contents) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ResponseUserBookContentDto> purchaseMultipleContent(String email , Set<Long> request) {
+		
+		User user=userRepo.findByEmail(email)
+		          .orElseThrow(() -> new UserNotExistException("Looks like you are not here"));
+		
+		var order=orderService.createOrder(OrderType.Virtual,
+				                            OrderStatus.PLACED,
+				                            user,
+				                            request);
+		return order.getPurchasedContent().stream().map(ubcMapper::toUCBDto).toList();
 	}
 
 }
