@@ -1,11 +1,13 @@
 package com.emi.config;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,7 +26,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final TokenRepo tokenRepo;
 	private final JwtService jwtService;
-	private final UserDetailsService userDetailsService;
 	
 	@Override
 	protected void doFilterInternal(
@@ -43,20 +44,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		
 		jwt=authHeader.substring(7);
 		String userName=jwtService.getUserName(jwt);
+		List<String> roles=jwtService.extractRole(jwt);
 		
+		Collection<? extends GrantedAuthority> authorities=roles.stream().map(SimpleGrantedAuthority::new).toList();
 		if(userName!=null && SecurityContextHolder.getContext().getAuthentication()==null) {
-			UserDetails userDetails=this.userDetailsService.loadUserByUsername(userName);
 			
 			var tokenValid=tokenRepo.findByToken(jwt)
 					.map(t -> t.isExpired() && t.isRevoked())
 					.orElse(false);
 			
-			if(jwtService.isTokenValid(jwt, userDetails) && tokenValid ) {
+			if(jwtService.isTokenValid(jwt) && tokenValid ) {
 				//token is valid then authenticate the use
 				UsernamePasswordAuthenticationToken auth=new UsernamePasswordAuthenticationToken(
-						userDetails,
+						userName,
 						null,
-						userDetails.getAuthorities());
+						authorities);
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			}
 		}

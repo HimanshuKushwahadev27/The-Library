@@ -14,17 +14,14 @@ import lombok.NoArgsConstructor;
 //user gives these information
 public class RequestAuthordto {
 	
-	
-	@Schema(example="John" , description="First name of the user")
-	@NotBlank(message="Please provide the required fields")
-	private String firstName;
-	
-	@Schema(example="Doe" , description="Last name of the user")
-	@NotBlank(message="Please provide the required fields")
-	private String lastName;
+	@Schema(example="theWonder" , description="NickName of the Author")
+	@NotBlank(message="Please enter the nickname")
+	private String penName;
 	
 	@Schema(example="I am an avid reader" , description="More info on the user")
 	@Size(max=2000)
 	private String bio;
 
+	@Schema(example="www.img.com" , description="url to profile pic")
+	private String url;
 }

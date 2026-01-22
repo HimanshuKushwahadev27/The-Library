@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -44,8 +45,9 @@ public class User {
 	private String password;
 	
 	//ensures data is stored as readable string in DB
+	@ElementCollection(fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)
-	private Role role;
+	private Set<Role> role;
 	
 	//allow for authentication or whether the user is allowed to use the app
 	private boolean isEnabled;

@@ -8,6 +8,7 @@ import com.emi.dto.requestDto.UserRegisterRequest;
 import com.emi.dto.requestDto.UserUpdateRequestDto;
 import com.emi.dto.responseDto.AdminUserResponseDto;
 import com.emi.dto.responseDto.ResponseUserDto;
+import com.emi.entity.User;
 import com.emi.enums.Role;
 
 public interface UserService {
@@ -17,6 +18,6 @@ public interface UserService {
 	public ResponseUserDto updateUser( UserUpdateRequestDto user);
 	public void deleteUser();
 	public void changePassword( PasswordUpdateRequest req);
-	void createAuthorByUserId( Role role);
+	void createAuthorByUserId(  User user1);
 	public ResponseUserDto getUser();
 }

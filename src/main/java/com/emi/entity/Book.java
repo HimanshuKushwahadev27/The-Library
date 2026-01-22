@@ -18,17 +18,31 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
+@AllArgsConstructor
 @Data
 @NoArgsConstructor
 @Entity
+@Table(
+	indexes= {
+			 @Index(name="idx_book_status" , columnList="bookStatus"),
+			 @Index(name = "idx_book_genre", columnList = "bookgenre"),
+			 @Index(name = "idx_book_language", columnList = "bookLanguage"),
+			 @Index(name = "idx_book_digital_price", columnList = "bookPriceDigital"),
+			 @Index(name = "idx_book_physical_price", columnList = "bookPricePhysical")	}
+		)
 public class Book {
 
 	@Id
@@ -55,6 +69,7 @@ public class Book {
 		joinColumns=@JoinColumn(name ="book_id"),
 		inverseJoinColumns=@JoinColumn(name="genre_id")
 	)
+	@Builder.Default
 	private Set<BookGenre> genres = new HashSet<>();
 	
 	private BigDecimal bookPriceDigital;
@@ -62,18 +77,19 @@ public class Book {
 	private BigDecimal bookPricePhysical;
 	
 	@Enumerated(EnumType.STRING)
-	private BookFormat bookformat;
+	private Set<BookFormat> bookformat;
 	
 	@Enumerated(EnumType.STRING)
 	private BookStatus bookStatus;
-	
-	
+		
 	@ManyToOne(cascade=CascadeType.MERGE , fetch=FetchType.LAZY)
 	@JoinColumn(name = "author_id" , unique =true , nullable =false)
 	private Author bookAuthor;
 	
 	//from cloud
 	private String coverImageUrl;
+	
+	private Integer chapterNumber;
 	
 	private LocalDateTime createdAt;
 	

@@ -2,11 +2,13 @@ package com.emi.service.Impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +53,17 @@ public class JwtService {
 	
 	public String generateToken(User user) {
 		UserDetails userpr = new UserPrinciple(user);
-		return generateToken(new HashMap<>() , userpr);
+		
+		Map<String ,Object> maps=new HashMap<>();
+		
+		List<String> roles=userpr
+				.getAuthorities()
+				.stream()
+				.map(GrantedAuthority::getAuthority)
+				.toList();
+		
+		maps.put("roles" , roles);
+		return generateToken(maps, userpr);
 	}
 	
 	public String generateToken(Map<String ,Object> extraClaims
@@ -66,8 +78,8 @@ public class JwtService {
 				
 	}
 	
-	public boolean isTokenValid(String jwt , UserDetails userDetail){
-		return (getUserName(jwt).equals(userDetail.getUsername()) && !isTokenExpire(jwt));
+	public boolean isTokenValid(String jwt ){
+		return  isTokenExpire(jwt);
 	}
 	
 	public boolean isTokenExpire(String jwt) {
@@ -76,5 +88,21 @@ public class JwtService {
 	
 	public Date getExpirationDate(String jwt) {
 		return extractClaim(jwt , Claims::getExpiration);
+	}
+	
+	public List<String> extractRole(String jwt){
+		Claims claim=getAllClaims(jwt);
+		
+		Object rolesObj=claim.get("roles");
+		
+		if(rolesObj instanceof List<?>) {
+			return ((List<?>) rolesObj)
+					.stream()
+					.map(Object::toString)
+					.toList()
+					;
+		}
+		
+		return List.of();
 	}
 }

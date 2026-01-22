@@ -1,6 +1,7 @@
 package com.emi.dto.requestDto;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import com.emi.entity.BookGenre;
 import com.emi.enums.BookFormat;
@@ -30,7 +31,7 @@ public class RequestBookDto {
 	private BookLanguage bookLanguage;
 	
 	@Schema(example="Romance" , description="Content type of the book")
-	private BookGenre genre;
+	private Set<BookGenre> genre;
 	
 	@Schema(example="Rs. 345" , description="Hard copy of the book")
 	private BigDecimal bookPriceDigital;
@@ -39,6 +40,11 @@ public class RequestBookDto {
 	private BigDecimal bookPricePhysical;
 
 	@Schema(example="Physical" , description="Is the book is in Physical or Virtual format")
-	private BookFormat format;
+	private Set<BookFormat> format;
  
+	@Schema(example="www.myUrl.in" , description="Url of the cover image if available")
+	private String url;
+	
+	@Schema(example="3424" , description="Total chapters in the book")
+	private Integer chapterNumbers;
 }

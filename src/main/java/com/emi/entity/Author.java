@@ -1,6 +1,7 @@
 package com.emi.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -11,9 +12,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
+@AllArgsConstructor
 @Entity
 @Data
 @NoArgsConstructor
@@ -29,6 +34,8 @@ public class Author {
 	
 	private String firstName;
 	
+	private String penName;
+	
 	private String lastName;
 	
 	private String bio;
@@ -38,6 +45,7 @@ public class Author {
 	private LocalDateTime 	joinedAt;
 	
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
-    private Set<BookContent> authoredContents;
+    @Builder.Default
+    private Set<BookContent> authoredContents = new HashSet<>();
 }
 

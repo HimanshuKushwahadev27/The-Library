@@ -2,69 +2,104 @@ package com.emi.service.Impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.emi.Repo.BookRepo;
 import com.emi.dto.requestDto.BookSearchRequestDto;
 import com.emi.dto.requestDto.RequestBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
+import com.emi.entity.Book;
 import com.emi.enums.BookStatus;
+import com.emi.enums.Role;
+import com.emi.exceptions.ContentNotFoundException;
+import com.emi.mapper.BookMapper;
 import com.emi.service.BookService;
 
 import lombok.RequiredArgsConstructor;
+import com.emi.specification.BookSpecification;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BookServiceImpl implements BookService{
 
-	
+	private final BookMapper bookMapper;
 	private final BookRepo bookRepo;
 	
 	@Override
-	public ResponseBookDto createBook(RequestBookDto requestBookDto) {
-		return null;
+	public Book createBook(RequestBookDto requestBookDto) {
+		
+		String isbn=requestBookDto.getIsbn();
+		
+		if(bookRepo.findByIsbnNumber(isbn)) {
+			throw new IllegalStateException("Book already exist : ");
+		}
+		
+		Book book=bookMapper.toBookDto(requestBookDto);
+		return book;
 	}
 
 	@Override
-	public ResponseBookDto updateBook(Long bookId, RequestBookDto requestBookDto) {
-		// TODO Auto-generated method stub
-		return null;
+	public void updateBook(Book book, RequestBookDto requestBookDto) {
+		bookMapper.transfer(book, requestBookDto);
 	}
 
 	@Override
 	public ResponseBookDto getByBookId(Long bookId) {
-		// TODO Auto-generated method stub
-		return null;
+	  Book book = bookRepo.findByIdAndStatus(BookStatus.AVAILABLE , bookId)
+			               .orElseThrow(() -> new ContentNotFoundException("Book Not found"));
+	  
+	  return bookMapper.toResponseFromBook(book);
 	}
 
 	@Override
 	public List<ResponseBookDto> getAllBook() {
-		// TODO Auto-generated method stub
-		return null;
+	    return bookRepo.findByStatus(BookStatus.AVAILABLE)
+	            .stream()
+	            .map(bookMapper::toResponseFromBook)
+	            .toList();
 	}
 
 	@Override
 	public void deleteBook(Long bookId) {
-		// TODO Auto-generated method stub
-		
+        Book book = bookRepo.findById(bookId).orElseThrow(() -> new ContentNotFoundException("book not found"));
+
+        book.setBookStatus(BookStatus.DELETED);
+
 	}
 
 	@Override
-	public List<ResponseBookDto> searchBooks(BookSearchRequestDto request) {
-		// TODO Auto-generated method stub
-		return null;
+	public Page<ResponseBookDto> searchBooks(
+			 BookSearchRequestDto request,
+			 Role role,
+			 Pageable pageable,
+			 Long authorId) {
+		
+		
+		if(role==Role.AUTHOR && authorId==null) {
+			
+			 throw new IllegalArgumentException(
+		                "authorId is required for AUTHOR search"
+		     );
+		}
+		return bookRepo
+				.findAll(BookSpecification.search(request ,role,authorId)
+						,pageable)
+				.map(bookMapper::toResponseFromBook);
 	}
 
 	@Override
 	public ResponseBookDto updateBookStatus(Long bookId, BookStatus status) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		 Book book = bookRepo.findByIdAndStatus(BookStatus.AVAILABLE , bookId)
+	               .orElseThrow(() -> new ContentNotFoundException("Book Not found"));
+		 
+		 book.setBookStatus(status);
+		 return bookMapper.toResponseFromBook(book);
 	}
 
-	@Override
-	public boolean bookExists(long bookId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }

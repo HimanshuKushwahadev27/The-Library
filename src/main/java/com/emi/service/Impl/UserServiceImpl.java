@@ -1,8 +1,11 @@
 package com.emi.service.Impl;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,18 +39,21 @@ public class UserServiceImpl implements UserService {
 	private final MembershipRepo membershipRepo;
 	private final UserRepo userRepo;
 		
+	@PreAuthorize("hasRole('USER')")
 	@Override
 	public void createUser(UserRegisterRequest request) {
 		if(userRepo.existByEmail(request.getEmail())) {
 			throw new UserAlreadyExistsException("Email already Exist");
 		}
 		
+		Set<Role> role= new HashSet<>();
+		role.add(Role.USER);
 		var user=new User();
 		  user.setEmail(request.getEmail());
 		  user.setFirstName(request.getFirstname());
 		  user.setLastName(request.getLastname());
 		  user.setPassword(passwordEncoder.encode(request.getPassword()));
-		  user.setRole(Role.USER);
+		  user.setRole(role);
 		  user.setUpdatedAt(LocalDateTime.now());
 		  user.setCreatedAt(LocalDateTime.now());
 		  user.setPasswordExpireDate(LocalDateTime.now().plusMonths(3));
@@ -64,6 +70,7 @@ public class UserServiceImpl implements UserService {
 		membershipRepo.save(membership);	 
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@Transactional
 	@Override
 	public List<AdminUserResponseDto> getAllUserForAdmin() {
@@ -83,6 +90,7 @@ public class UserServiceImpl implements UserService {
 		return userMapper.toUserProfile(user);
 	}
 
+	@PreAuthorize("hasRole('USER')")
 	@Transactional
 	@Override
 	public ResponseUserDto updateUser( UserUpdateRequestDto request) {
@@ -99,6 +107,7 @@ public class UserServiceImpl implements UserService {
 		return userMapper.toUserProfile(user);
 	}
 
+	@PreAuthorize("hasRole('USER')")
 	@Transactional
 	@Override
 	public void deleteUser() {
@@ -117,6 +126,7 @@ public class UserServiceImpl implements UserService {
          
 	}
 
+	@PreAuthorize("hasRole('USER')")
 	@Transactional
 	@Override
 	public void changePassword( PasswordUpdateRequest request) {
@@ -135,9 +145,14 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Transactional
 	@Override
-	public void createAuthorByUserId( Role role) {
+	public void createAuthorByUserId( User user) {
 		
+		Set<Role> role=user.getRole();
+		role.add(Role.AUTHOR);
+		user.setRole(role);
+		userRepo.save(user);
 	}
 
 

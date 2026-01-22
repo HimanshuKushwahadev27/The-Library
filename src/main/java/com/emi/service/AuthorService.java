@@ -1,20 +1,23 @@
 package com.emi.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.emi.dto.requestDto.RequestAuthordto;
+import com.emi.dto.requestDto.RequestBookDto;
 import com.emi.dto.responseDto.ResponseAuthordto;
+import com.emi.dto.responseDto.ResponseBookDto;
 
 public interface AuthorService {
 
-	public ResponseAuthordto becomeAuthor(Long userId, RequestAuthordto dto);
+	public ResponseAuthordto becomeAuthor(String email, RequestAuthordto dto);
 	
-	ResponseAuthordto updateAuthorProfile(Long id , RequestAuthordto request);
+	ResponseAuthordto updateAuthorProfile(String email , RequestAuthordto request);
 	
-	Optional<ResponseAuthordto> getAuthorById(Long id);
+	ResponseAuthordto getAuthorById(Long id);
 	
-	Optional<ResponseAuthordto> getAuthorByUserId(Long userId);
+	ResponseAuthordto getAuthorByUserId(Long userId);
 	
 	List<ResponseAuthordto> getAllAuthor();
+	
+
 }
