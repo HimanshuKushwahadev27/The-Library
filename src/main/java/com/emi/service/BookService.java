@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.emi.dto.requestDto.BookSearchRequestDto;
 import com.emi.dto.requestDto.RequestBookDto;
+import com.emi.dto.requestDto.RequestPhysicalBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
 import com.emi.entity.Book;
 import com.emi.enums.BookStatus;
@@ -14,7 +15,7 @@ import com.emi.enums.Role;
 
 public interface BookService {
 
-	Book createBook(RequestBookDto requestBookDto);
+	Book createBookPhysical(RequestPhysicalBookDto requestBookDto);
 	
 	//admin
 	void updateBook(Book book , RequestBookDto requestBookDto);
@@ -28,5 +29,7 @@ public interface BookService {
 	Page<ResponseBookDto> searchBooks(BookSearchRequestDto request , Role role, Pageable pageable , Long authorId);
 	
 	ResponseBookDto updateBookStatus(Long bookId , BookStatus status);
+
+	Book createBookDigital(RequestBookDto requestBookDto);
 	
 }

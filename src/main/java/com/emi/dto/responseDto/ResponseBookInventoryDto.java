@@ -2,17 +2,18 @@ package com.emi.dto.responseDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@Builder
 @XmlRootElement
 @Data
 @NoArgsConstructor
 @Schema(description = "Response DTO for Book Inventory")
 public class ResponseBookInventoryDto {
-
-	   @Schema(example = "101", description = "Inventory Id")
-	    private Long bookInventoryId;
 
 	    @Schema(example = "202", description = "Id of the book")
 	    private Long bookId;

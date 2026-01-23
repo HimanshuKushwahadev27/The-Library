@@ -1,7 +1,6 @@
 package com.emi.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.emi.dto.requestDto.RequestBookContentDto;
 import com.emi.dto.responseDto.ResponseBookContentDto;
@@ -11,9 +10,9 @@ public interface BookContentService {
 
 	ResponseBookContentDto createDraft(RequestBookContentDto request);
 	
-	ResponseBookContentDto updateDraft(RequestBookContentDto request);
+	ResponseBookContentDto updateDraft(RequestBookContentDto request , String email);
 	
-	ResponseBookContentDto publishDraft(RequestBookContentDto request);
+	ResponseBookContentDto publishDraft(RequestBookContentDto request  , String email);
 	
 	//get all drafts of the author
     List<ResponseBookContentDto> getDraftsByAuthor(Long authorId);
@@ -22,7 +21,7 @@ public interface BookContentService {
     List<ResponseBookContentDto> getContentsByBook(Long bookId);
 
     //single content by id 
-    Optional<ResponseBookContentDto> getContentById(Long contentId);
+    ResponseBookContentDto getContentById(Long contentId);
 
 
 }

@@ -8,7 +8,9 @@ import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
 import com.emi.dto.requestDto.RequestBookDto;
+import com.emi.dto.requestDto.RequestPhysicalBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
+import com.emi.dto.responseDto.ResponsePhysicalBookDto;
 import com.emi.entity.Book;
 import com.emi.enums.BookStatus;
 
@@ -33,6 +35,23 @@ public class BookMapper {
 				
 	}
 	
+	public Book toBookPhysicalDto(RequestPhysicalBookDto request) {
+		return Book.builder()
+				.bookTitle(request.getBookTitle())
+				.description(request.getDescription())
+				.isbn(request.getIsbn())
+				.bookLanguage(request.getBookLanguage())
+				.bookPriceDigital(request.getBookPriceDigital())
+				.bookPricePhysical(request.getBookPricePhysical())
+				.bookformat(request.getFormat())
+				.bookStatus(BookStatus.AVAILABLE)
+				.createdAt(LocalDateTime.now())
+				.coverImageUrl(request.getUrl())
+				.genres(request.getGenre())
+				.deletedAt(null)
+				.build();
+	}
+	
 	public ResponseBookDto toResponseFromBook(Book book) {
 		String name=Stream
 				.of(book.getBookAuthor().getFirstName()
@@ -50,8 +69,32 @@ public class BookMapper {
 				.genre(book.getGenres())
 				.language(book.getBookLanguage())
 				.chapterNumbers(book.getChapterNumber())
-				.bookPriceDigital(book.getBookPriceDigital())
 				.bookPricePhysical(book.getBookPriceDigital())
+				.build();
+				
+	}
+	
+	
+	public ResponsePhysicalBookDto toResponsePhysicalFromBook(Book book ,RequestPhysicalBookDto req) {
+		String name=Stream
+				.of(book.getBookAuthor().getFirstName()
+				  , book.getBookAuthor().getLastName())
+				.filter(Objects::nonNull)
+				.filter(s -> !s.isBlank())
+				.collect(Collectors.joining(" "));
+				
+		return ResponsePhysicalBookDto
+				.builder()
+				.title(book.getBookTitle())
+				.description(book.getDescription())
+				.authorName(name)
+				.format(book.getBookformat())
+				.genre(book.getGenres())
+				.language(book.getBookLanguage())
+				.chapterNumbers(book.getChapterNumber())
+				.bookPricePhysical(book.getBookPricePhysical())
+				.totalCopies(req.getTotalCopies())
+				.availableCopies(req.getAvailableCopies())
 				.build();
 				
 	}

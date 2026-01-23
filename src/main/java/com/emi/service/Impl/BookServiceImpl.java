@@ -10,12 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.emi.Repo.BookRepo;
 import com.emi.dto.requestDto.BookSearchRequestDto;
 import com.emi.dto.requestDto.RequestBookDto;
+import com.emi.dto.requestDto.RequestPhysicalBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
 import com.emi.entity.Book;
+import com.emi.enums.BookFormat;
 import com.emi.enums.BookStatus;
 import com.emi.enums.Role;
 import com.emi.exceptions.ContentNotFoundException;
+import com.emi.mapper.BookInventoryMapper;
 import com.emi.mapper.BookMapper;
+import com.emi.service.BookInventoryService;
 import com.emi.service.BookService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +34,20 @@ public class BookServiceImpl implements BookService{
 	private final BookRepo bookRepo;
 	
 	@Override
-	public Book createBook(RequestBookDto requestBookDto) {
+	public Book createBookPhysical(RequestPhysicalBookDto requestBookDto) {
+		
+		String isbn=requestBookDto.getIsbn();
+		
+		if(bookRepo.findByIsbnNumber(isbn)) {
+			throw new IllegalStateException("Book already exist : ");
+		}
+		
+		Book book=bookMapper.toBookPhysicalDto(requestBookDto);
+	    return book;
+	}
+	
+	@Override
+	public Book createBookDigital(RequestBookDto requestBookDto) {
 		
 		String isbn=requestBookDto.getIsbn();
 		
@@ -39,7 +56,7 @@ public class BookServiceImpl implements BookService{
 		}
 		
 		Book book=bookMapper.toBookDto(requestBookDto);
-		return book;
+	    return book;
 	}
 
 	@Override

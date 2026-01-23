@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @XmlRootElement
 @Builder
 @AllArgsConstructor
-public class ResponseBookDto {
+public class ResponsePhysicalBookDto {
 
 	private String title;
 	private String description;
@@ -30,7 +30,10 @@ public class ResponseBookDto {
 	
 	private Integer chapterNumbers;
 	
+	private Integer availableCopies;
+	private Integer totalCopies;
+	
 	private BigDecimal bookPricePhysical;
-
+	
 	
 }

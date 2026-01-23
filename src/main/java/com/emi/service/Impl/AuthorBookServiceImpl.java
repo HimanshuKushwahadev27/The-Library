@@ -7,19 +7,25 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import com.emi.entity.BookInventory;
 import com.emi.Repo.AuthorRepo;
+import com.emi.Repo.BookInventoryRepo;
 import com.emi.Repo.BookRepo;
 import com.emi.dto.requestDto.BookSearchRequestDto;
 import com.emi.dto.requestDto.RequestBookDto;
+import com.emi.dto.requestDto.RequestPhysicalBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
+import com.emi.dto.responseDto.ResponsePhysicalBookDto;
 import com.emi.entity.Author;
 import com.emi.entity.Book;
 import com.emi.enums.BookStatus;
 import com.emi.enums.Role;
 import com.emi.exceptions.ContentNotFoundException;
 import com.emi.exceptions.UserNotExistException;
+import com.emi.mapper.BookInventoryMapper;
 import com.emi.mapper.BookMapper;
 import com.emi.service.AuthorBookService;
+import com.emi.service.BookInventoryService;
 import com.emi.service.BookService;
 
 import jakarta.transaction.Transactional;
@@ -36,15 +42,42 @@ public class AuthorBookServiceImpl implements AuthorBookService {
 	private final BookService bookService;
 	private final BookRepo bookRepo;
 	private final BookMapper bookMapper;
+	private final BookInventoryService bookInventoryService;
+	private final BookInventoryMapper bookInventoryMapper;
+	private final BookInventoryRepo bookInventoryRepo;
 	
 	@PreAuthorize("hasRole('AUTHOR')")
 	@Override
-	public ResponseBookDto createBookByAuthor(String email,RequestBookDto request) {
+	public ResponsePhysicalBookDto createPhysicalBookByAuthor(String email,RequestPhysicalBookDto request) {
 		
-		var author=authorRepo.findByEmail(email)
+		var author=authorRepo.findAuthorByUserEmail(email)
 				          .orElseThrow(() -> new UserNotExistException("Author not exist"));
 		
-		Book book=bookService.createBook(request);
+		Book book=bookService.createBookPhysical(request);
+		
+		
+		book.setBookAuthor(author);
+		bookRepo.save(book);
+		BookInventory bookInv=bookInventoryService
+				.createInventory(bookInventoryMapper
+						.getBasicInventory(), book);
+		
+		bookInv.setAvailableCopies(request.getAvailableCopies());
+		bookInv.setTotalCopies(request.getTotalCopies());
+		bookInventoryRepo.save(bookInv);
+		
+		return bookMapper.toResponsePhysicalFromBook(book , request);
+	}
+	
+	@PreAuthorize("hasRole('AUTHOR')")
+	@Override
+	public ResponseBookDto createDigitalBookByAuthor(String email,RequestBookDto request) {
+		
+		var author=authorRepo.findAuthorByUserEmail(email)
+				          .orElseThrow(() -> new UserNotExistException("Author not exist"));
+		
+		Book book=bookService.createBookDigital(request);
+		
 		
 		book.setBookAuthor(author);
 		bookRepo.save(book);
@@ -77,7 +110,7 @@ public class AuthorBookServiceImpl implements AuthorBookService {
 
         Book book = bookRepo.findById(bookId).orElseThrow(() -> new ContentNotFoundException("book not found"));
 		
-        var author=authorRepo.findByEmail(email)
+        var author=authorRepo.findAuthorByUserEmail(email)
 		          .orElseThrow(() -> new UserNotExistException("Author not exist"));
 
 		if(book.getBookAuthor().getAuthorId()!=author.getAuthorId()) {
@@ -99,7 +132,7 @@ public class AuthorBookServiceImpl implements AuthorBookService {
 	@Override
 	public Page<ResponseBookDto> getPublishedBook(String email,Pageable pageable, BookSearchRequestDto request) {
 		
-		Author author = authorRepo.findByEmail(email)
+		Author author = authorRepo.findAuthorByUserEmail(email)
 				                  .orElseThrow(() -> new UserNotExistException("You Are Not a Author"));   
 		
 		return bookService.searchBooks(request, Role.AUTHOR, pageable, author.getAuthorId());
@@ -109,7 +142,7 @@ public class AuthorBookServiceImpl implements AuthorBookService {
 	@Override
 	public ResponseBookDto updateBookStatusbyAuthor(String email,Long bookId, BookStatus status) {
 	      Book book = bookRepo.findById(bookId).orElseThrow(() -> new ContentNotFoundException("book not found"));
-		  var author=authorRepo.findByEmail(email)
+		  var author=authorRepo.findAuthorByUserEmail(email)
 			          .orElseThrow(() -> new UserNotExistException("Author not exist"));
 	      
 			if(book.getBookAuthor().getAuthorId()!=author.getAuthorId()) {
