@@ -67,10 +67,14 @@ public class BorrowRecordController {
     		@RequestBody @Valid AdminRequestBorrowRecordDto request
     		){
 		
+		Sort sortObj= (sort==null)
+				?Sort.unsorted()
+			    :Sort.by(parseSort(sort));
+		
 		Pageable pageable = PageRequest
 				.of(page,
 				    size,
-				    Sort.by(parseSort(sort)));
+				    sortObj);
 		
 		if(request.getBookId()!=null && request.getStatus()==null ) {
 			return borrowRecordService.getBorrowRecordsByBookId( request, pageable);

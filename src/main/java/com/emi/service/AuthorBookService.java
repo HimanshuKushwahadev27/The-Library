@@ -14,11 +14,9 @@ public interface AuthorBookService {
 
 	ResponsePhysicalBookDto createPhysicalBookByAuthor(String email,RequestPhysicalBookDto request);
 
-	ResponseBookDto updateBookByAuthor(Long bookId, RequestBookDto requestBookDto , Long id);
+	ResponseBookDto updateBookByAuthor(String email, RequestBookDto requestBookDto , Long id);
 	
 	void deleteBookByauthor(Long bookId , String email);
-
-	ResponseBookDto draftedBook(Long bookId, RequestBookDto requestBookDto);
 	
     ResponseBookDto updateBookStatusbyAuthor(String email,Long bookId, BookStatus status);
 	

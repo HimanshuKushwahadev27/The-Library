@@ -87,7 +87,7 @@ public class AuthorBookServiceImpl implements AuthorBookService {
 	
 	@PreAuthorize("hasRole('AUTHOR')")
 	@Override
-	public ResponseBookDto updateBookByAuthor(Long bookId, RequestBookDto requestBookDto, Long authorId) {
+	public ResponseBookDto updateBookByAuthor(String email, RequestBookDto requestBookDto, Long bookId) {
 		
 		Book book = bookRepo.findById(bookId).orElseThrow(() -> new ContentNotFoundException("book not found"));
 		
@@ -95,7 +95,10 @@ public class AuthorBookServiceImpl implements AuthorBookService {
 			throw new IllegalStateException("book deleted");
 		}
 		
-		if(book.getBookAuthor().getAuthorId()!=authorId) {
+		Author author=authorRepo.findAuthorByUserEmail(email)
+				                 .orElseThrow(() -> new  UserNotExistException("Author not exist"));
+				               
+		if(book.getBookAuthor().getAuthorId()!=author.getAuthorId()) {
 			throw new AccessDeniedException("book not yours");
 		}
 			
@@ -118,14 +121,6 @@ public class AuthorBookServiceImpl implements AuthorBookService {
 		}
 		
 		bookService.deleteBook(bookId);
-	}
-
-	
-	@PreAuthorize("hasRole('AUTHOR')")
-	@Override
-	public ResponseBookDto draftedBook(Long bookId, RequestBookDto requestBookDto) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@PreAuthorize("hasRole('AUTHOR')")

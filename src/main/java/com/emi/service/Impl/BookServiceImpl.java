@@ -115,6 +115,7 @@ public class BookServiceImpl implements BookService{
 	               .orElseThrow(() -> new ContentNotFoundException("Book Not found"));
 		 
 		 book.setBookStatus(status);
+		 bookRepo.save(book);
 		 return bookMapper.toResponseFromBook(book);
 	}
 
