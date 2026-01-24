@@ -3,7 +3,6 @@ package com.emi.dto.responseDto;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import com.emi.entity.Membership;
 import com.emi.enums.Role;
 
 

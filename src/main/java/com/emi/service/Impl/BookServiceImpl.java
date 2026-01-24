@@ -27,6 +27,7 @@ import com.emi.specification.BookSpecification;
 @Transactional
 public class BookServiceImpl implements BookService{
 
+	private final GenreServiceImpl bookGenre;
 	private final BookMapper bookMapper;
 	private final BookRepo bookRepo;
 	
@@ -35,11 +36,13 @@ public class BookServiceImpl implements BookService{
 		
 		String isbn=requestBookDto.getIsbn();
 		
-		if(bookRepo.findByIsbnNumber(isbn)) {
+		if(bookRepo.existByIsbnNumber(isbn)) {
 			throw new IllegalStateException("Book already exist : ");
 		}
 		
+		
 		Book book=bookMapper.toBookPhysicalDto(requestBookDto);
+		bookGenre.assignGenre(requestBookDto.getGenre(), book);
 	    return book;
 	}
 	
@@ -48,24 +51,26 @@ public class BookServiceImpl implements BookService{
 		
 		String isbn=requestBookDto.getIsbn();
 		
-		if(bookRepo.findByIsbnNumber(isbn)) {
+		if(bookRepo.existByIsbnNumber(isbn)) {
 			throw new IllegalStateException("Book already exist : ");
 		}
 		
 		Book book=bookMapper.toBookDto(requestBookDto);
+		bookGenre.assignGenre(requestBookDto.getGenre(), book);
 	    return book;
 	}
 
 	@Override
 	public void updateBook(Book book, RequestBookDto requestBookDto) {
 		bookMapper.transfer(book, requestBookDto);
+		bookGenre.assignGenre(requestBookDto.getGenre(), book);
+
 	}
 
 	@Override
 	public ResponseBookDto getByBookId(Long bookId) {
 	  Book book = bookRepo.findByIdAndStatus(BookStatus.AVAILABLE , bookId)
 			               .orElseThrow(() -> new ContentNotFoundException("Book Not found"));
-	  
 	  return bookMapper.toResponseFromBook(book);
 	}
 

@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
 
 import com.emi.dto.requestDto.BookSearchRequestDto;
 import com.emi.entity.Book;
+import com.emi.entity.BookGenre;
 import com.emi.enums.BookFormat;
 import com.emi.enums.BookStatus;
 import com.emi.enums.Role;
 
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 
 @Component
@@ -23,13 +25,14 @@ public class BookSpecification {
 	 	        Role context,
 	 	        Long authorId)
 	 {
-	 		
+
 	 		//root - book table 
 	 		//query ->query being build
 	 		// cb -> criteria builder (helps in creating condition)
 	 		//“Using the Book table, build conditions with CriteriaBuilder.”
 	 		return (root, query, cb) -> {
-	 			
+	            query.distinct(true);
+
 	 			//conditions like 
 	 			//status=AVAILABLE
 	 			//collecting these conditions in list
@@ -62,8 +65,15 @@ public class BookSpecification {
 	 			}
 	 			
 	 			if(req.getGenre()!=null) {
-	 				predicates.add(cb.equal(root.get("bookGenre"), req.getGenre()));
-	 			}
+	 			    Join<Book, BookGenre> genreJoin = root.join("genres");
+
+	                predicates.add(
+	                        cb.equal(
+	                                cb.lower(genreJoin.get("name")),
+	                                req.getGenre().getName().toLowerCase()
+	                        )
+	                );	 	
+	           }
 	 			
 	            if (req.getBookLanguage() != null) {
 	                predicates.add(cb.equal(root.get("bookLanguage"), req.getBookLanguage()));

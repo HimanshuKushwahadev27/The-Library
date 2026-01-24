@@ -2,6 +2,7 @@ package com.emi.mapper;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,6 +13,7 @@ import com.emi.dto.requestDto.RequestPhysicalBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
 import com.emi.dto.responseDto.ResponsePhysicalBookDto;
 import com.emi.entity.Book;
+import com.emi.entity.BookGenre;
 import com.emi.enums.BookStatus;
 
 @Component
@@ -29,7 +31,6 @@ public class BookMapper {
 				.bookStatus(BookStatus.AVAILABLE)
 				.createdAt(LocalDateTime.now())
 				.coverImageUrl(request.getUrl())
-				.genres(request.getGenre())
 				.deletedAt(null)
 				.build();
 				
@@ -47,7 +48,6 @@ public class BookMapper {
 				.bookStatus(BookStatus.AVAILABLE)
 				.createdAt(LocalDateTime.now())
 				.coverImageUrl(request.getUrl())
-				.genres(request.getGenre())
 				.deletedAt(null)
 				.build();
 	}
@@ -59,14 +59,16 @@ public class BookMapper {
 				.filter(Objects::nonNull)
 				.filter(s -> !s.isBlank())
 				.collect(Collectors.joining(" "));
-				
+		
+		Set<String> genre=book.getGenres().stream().map(BookGenre::getName).collect(Collectors.toSet());
+		
 		return ResponseBookDto
 				.builder()
 				.title(book.getBookTitle())
 				.description(book.getDescription())
 				.authorName(name)
 				.format(book.getBookformat())
-				.genre(book.getGenres())
+				.genre(genre)
 				.language(book.getBookLanguage())
 				.chapterNumbers(book.getChapterNumber())
 				.bookPricePhysical(book.getBookPriceDigital())
@@ -83,13 +85,15 @@ public class BookMapper {
 				.filter(s -> !s.isBlank())
 				.collect(Collectors.joining(" "));
 				
+		Set<String> genre=book.getGenres().stream().map(BookGenre::getName).collect(Collectors.toSet());
+		
 		return ResponsePhysicalBookDto
 				.builder()
 				.title(book.getBookTitle())
 				.description(book.getDescription())
 				.authorName(name)
 				.format(book.getBookformat())
-				.genre(book.getGenres())
+				.genre(genre)
 				.language(book.getBookLanguage())
 				.chapterNumbers(book.getChapterNumber())
 				.bookPricePhysical(book.getBookPricePhysical())
@@ -105,7 +109,6 @@ public class BookMapper {
 		book.setDescription(request.getDescription());
 		book.setIsbn(request.getIsbn());
 		book.setBookLanguage(request.getBookLanguage());
-		book.setGenres(request.getGenre());
 		book.setBookPriceDigital(request.getBookPriceDigital());
 		book.setBookPricePhysical(request.getBookPricePhysical());
 		book.setCoverImageUrl(request.getUrl());

@@ -18,7 +18,7 @@ public interface BookRepo extends JpaRepository<Book, Long>  , JpaSpecificationE
 			SELECT b FROM Book b
 			WHERE b.isbn = :isbn
 			""")
-	boolean findByIsbnNumber(@Param("isbn")String isbn);
+	boolean existByIsbnNumber(@Param("isbn")String isbn);
 
 	@Query("""
 			SELECT b from Book b 

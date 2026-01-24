@@ -43,6 +43,7 @@ public class AuthorServiceImpl implements AuthorService{
 		}
 		user=userService.createAuthorByUserId(user);
 		Author author=authorMapper.fromUserToAuthor(user, dto);
+		authorRepo.save(author);
 		return authorMapper.fromAuthorToResponse(author);
 	}
 
@@ -54,6 +55,7 @@ public class AuthorServiceImpl implements AuthorService{
 				.orElseThrow(() -> new  UserNotExistException("Author is not here"));
 		
 		authorMapper.transfer(author,request);
+		
 		authorRepo.save(author);
 		return authorMapper.fromAuthorToResponse(author);
 	}

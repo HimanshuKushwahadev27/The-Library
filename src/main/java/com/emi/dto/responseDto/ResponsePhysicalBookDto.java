@@ -3,7 +3,6 @@ package com.emi.dto.responseDto;
 import java.math.BigDecimal;
 import java.util.Set;
 
-import com.emi.entity.BookGenre;
 import com.emi.enums.BookFormat;
 import com.emi.enums.BookLanguage;
 
@@ -25,7 +24,7 @@ public class ResponsePhysicalBookDto {
 	private String authorName;
 	
 	private Set<BookFormat> format;
-	private Set<BookGenre> genre;
+	private Set<String> genre;
 	private BookLanguage language;
 	
 	private Integer chapterNumbers;

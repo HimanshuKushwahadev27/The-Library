@@ -3,7 +3,6 @@ package com.emi.dto.requestDto;
 import java.math.BigDecimal;
 import java.util.Set;
 
-import com.emi.entity.BookGenre;
 import com.emi.enums.BookFormat;
 import com.emi.enums.BookLanguage;
 
@@ -31,7 +30,7 @@ public class RequestBookDto {
 	private BookLanguage bookLanguage;
 	
 	@Schema(example="Romance" , description="Content type of the book")
-	private Set<BookGenre> genre;
+	private Set<String> genre;
 	
 	@Schema(example="Rs. 345" , description="Hard copy of the book")
 	private BigDecimal bookPriceDigital;

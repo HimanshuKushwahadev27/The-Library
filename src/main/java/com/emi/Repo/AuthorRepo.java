@@ -15,5 +15,6 @@ public interface AuthorRepo extends JpaRepository<Author,Long> {
 			WHERE a.user.email=:email
 			""")
 	Optional<Author> findAuthorByUserEmail(@Param("email") String email);
+	
 }
 
