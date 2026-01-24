@@ -40,7 +40,7 @@ public class UserMapper {
 				.lastname(user.getLastName())
 				.isAccountNonLocked(user.isAccountNonLocked())
 				.id(user.getUser_id())
-				.membership(user.getMembership())
+				.membership(user.getMembership().getAccessType().toString())
 				.updateAt(user.getUpdatedAt())
 				.joinedAt(user.getCreatedAt())
 				.build();
@@ -52,7 +52,6 @@ public class UserMapper {
 	public ResponseUserDto toUserProfile(User user) {
 		// TODO Auto-generated method stub
 		
-		Set<Role> role=user.getRole();
 		var response= ResponseUserDto
 				.builder()
 				.email(user.getEmail())
@@ -60,10 +59,9 @@ public class UserMapper {
 						.filter(Objects::nonNull)
 						.collect(Collectors.joining(" ")))
 				.joinedAt(user.getCreatedAt())
-				.membership(user.getMembership())
+				.membership(user.getMembership().getAccessType().toString())
 				.build()
 				;
-		response.setRole(role);
 		return response;
 	}
 	

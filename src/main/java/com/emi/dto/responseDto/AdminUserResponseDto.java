@@ -25,7 +25,7 @@ public class AdminUserResponseDto {
 	
 	private String email;
 	
-	private Membership membership;
+	private String membership;
 	private Set<Role> role;
 	
 	private boolean enabled;

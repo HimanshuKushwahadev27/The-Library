@@ -8,6 +8,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -26,6 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final TokenRepo tokenRepo;
 	private final JwtService jwtService;
+	private final UserDetailsService userDetailsService;
 	
 	@Override
 	protected void doFilterInternal(
@@ -34,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			FilterChain filterChain)
 			throws ServletException, IOException {
 
-		final String authHeader=request.getHeader("Authentication");
+		final String authHeader=request.getHeader("Authorization");
 		final String jwt;
 		
 		if(authHeader==null || !authHeader.startsWith("Bearer ")) {
@@ -47,18 +51,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		List<String> roles=jwtService.extractRole(jwt);
 		
 		Collection<? extends GrantedAuthority> authorities=roles.stream().map(SimpleGrantedAuthority::new).toList();
-		if(userName!=null && SecurityContextHolder.getContext().getAuthentication()==null) {
+		
+		if(userName!=null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			
+			UserDetails userDetails =
+                    this.userDetailsService.loadUserByUsername(userName);
 			
 			var tokenValid=tokenRepo.findByToken(jwt)
-					.map(t -> t.isExpired() && t.isRevoked())
+					.map(t -> !t.isExpired() && !t.isRevoked())
 					.orElse(false);
 			
 			if(jwtService.isTokenValid(jwt) && tokenValid ) {
 				//token is valid then authenticate the use
 				UsernamePasswordAuthenticationToken auth=new UsernamePasswordAuthenticationToken(
-						userName,
+						userDetails,
 						null,
 						authorities);
+				
+				auth.setDetails(
+					    new WebAuthenticationDetailsSource()
+					        .buildDetails(request)
+					);
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			}
 		}

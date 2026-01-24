@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.emi.dto.requestDto.LoginRequest;
 import com.emi.dto.requestDto.UserRegisterRequest;
 import com.emi.dto.responseDto.AuthenticateResponse;
+import com.emi.service.UserService;
 import com.emi.service.Impl.AuthService;
-import com.emi.service.Impl.UserServiceImpl;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-	private final UserServiceImpl userService;
+	private final UserService userService;
 	private final AuthService authService;
 	
 	@PostMapping(
@@ -29,7 +29,9 @@ public class AuthController {
 			produces={"application/json" , "application/xml"}  , 
 			consumes={"application/json" , "application/xml"} 
 			)
-	public ResponseEntity<?> Register(@RequestBody @Valid UserRegisterRequest request){
+	public ResponseEntity<?> Register(
+			@RequestBody @Valid UserRegisterRequest request)
+	{
 		userService.createUser(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body("You are Registered Please go to login endpoint");
 	}

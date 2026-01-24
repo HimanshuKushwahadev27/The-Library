@@ -7,21 +7,25 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.emi.entity.UserBookContent;
+import com.emi.Repo.AuthorRepo;
 import com.emi.Repo.BookContentRepo;
 import com.emi.Repo.BookRepo;
 import com.emi.Repo.OrderRepo;
 import com.emi.Repo.UserRepo;
 
 import com.emi.dto.responseDto.ResponseOrderDto;
+import com.emi.entity.Book;
 import com.emi.entity.BookContent;
 import com.emi.entity.Order;
 import com.emi.entity.User;
 import com.emi.enums.OrderStatus;
 import com.emi.enums.OrderType;
+import com.emi.enums.Role;
 import com.emi.exceptions.ContentNotFoundException;
 import com.emi.exceptions.UserNotExistException;
 import com.emi.mapper.OrderMapper;
@@ -35,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
 	
+	private final AuthorRepo authorRepo;
 	private final BookRepo bookRepo;
 	private final OrderMapper orderMapper;
 	private final OrderRepo orderRepo;
@@ -74,6 +79,7 @@ public class OrderServiceImpl implements OrderService{
 		return order;
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@Override
 	public ResponseOrderDto getOrderById(Long id) {
 		
@@ -82,12 +88,15 @@ public class OrderServiceImpl implements OrderService{
 		return orderMapper.orderToResponseDto(order);
 	}
 
+	@PreAuthorize("hasRole('USER')")
 	@Override
 	public List<ResponseOrderDto> getOrderByUserId(String email) {
 		User user=userRepo.findByEmail(email)
 				          .orElseThrow(() -> new UserNotExistException("looks like u are not registered"));
-	    		
+		
 		List<Order> orderInfo=orderRepo.findAllOrderByUserId(user.getUser_id());
+		
+		
 		
 		if(orderInfo==null) {
 			throw new ContentNotFoundException("No Orders for you , make purchase");
@@ -96,12 +105,14 @@ public class OrderServiceImpl implements OrderService{
 		return orderInfo.stream().map(orderMapper::orderToResponseDto).toList();
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@Override
 	public List<ResponseOrderDto> getAllOrders() {
 		List<Order> info=orderRepo.findAll();
 		return info.stream().map(orderMapper::orderToResponseDto).toList();
 	}
 
+	@PreAuthorize("hasRole('USER')")
 	@Override
 	public void cancelOrder(Long orderId , String email) {
 		
@@ -128,12 +139,26 @@ public class OrderServiceImpl implements OrderService{
 		return null;
 	}
 
+	@PreAuthorize("hasRole('AUTHOR')")
 	@Override
-	public List<ResponseOrderDto> getOrdersByBookId(Long bookId) {
+	public List<ResponseOrderDto> getOrdersByBookId(Long bookId, String email) {
 		
-		 bookRepo.findById(bookId)
+		Book book = bookRepo.findById(bookId)
 				            .orElseThrow(() -> new ContentNotFoundException("Book is not available"));
 		
+		var user=userRepo
+				.findByEmail(email)
+				.orElseThrow(() -> new UserNotExistException("You are not registered as aithor"));
+	
+		if(user.getRole().contains(Role.AUTHOR) && !user.getRole().contains(Role.ADMIN)  ) {
+			var author=authorRepo
+					.findAuthorByUserEmail(email)
+					.orElseThrow(() -> new UserNotExistException("You are not registered as aithor"));
+             if(book.getBookAuthor().getAuthorId()!=author.getAuthorId()) {
+            	 throw new AccessDeniedException("Its not your book");
+             }
+		}
+		 
 		List<Order> info= orderRepo.findAllOrderByBookId(bookId);
 		
 		return info.stream().map(orderMapper::orderToResponseDto).toList();

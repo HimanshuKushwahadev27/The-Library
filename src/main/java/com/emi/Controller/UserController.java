@@ -47,7 +47,8 @@ public class UserController {
 		    description="users endpoint"
 		)
 	@PutMapping("/updateMe")
-	public ResponseUserDto update(@RequestBody @Valid UserUpdateRequestDto request) {
+	public ResponseUserDto update(
+			@RequestBody @Valid UserUpdateRequestDto request) {
 		return userService.updateUser( request);
 	}
 	

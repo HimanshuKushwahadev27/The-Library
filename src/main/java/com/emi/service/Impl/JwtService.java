@@ -79,7 +79,7 @@ public class JwtService {
 	}
 	
 	public boolean isTokenValid(String jwt ){
-		return  isTokenExpire(jwt);
+		return  !isTokenExpire(jwt);
 	}
 	
 	public boolean isTokenExpire(String jwt) {

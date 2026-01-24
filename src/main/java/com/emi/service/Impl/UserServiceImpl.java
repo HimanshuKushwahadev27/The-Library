@@ -38,14 +38,13 @@ public class UserServiceImpl implements UserService {
 	private final MembershipRepo membershipRepo;
 	private final UserRepo userRepo;
 		
-	@PreAuthorize("hasRole('USER')")
 	@Override
 	public void createUser(UserRegisterRequest request) {
 		
 		userRepo.findByEmail(request.getEmail()).ifPresent(u -> {
 			throw new IllegalArgumentException("User already exist");
 		});
-		
+		System.out.print("Register");
 		
 		Set<Role> role= new HashSet<>();
 		role.add(Role.USER);
@@ -81,13 +80,14 @@ public class UserServiceImpl implements UserService {
 				.toList();	         
 	}
 	
+	@PreAuthorize("hasRole('USER')")
 	@Override
 	public ResponseUserDto getUser() {
 		
 		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
 		String email=auth.getName();
 		User user= userRepo.findByEmail(email)
-				.orElseThrow(() -> new UserNotExistException("USer not found"));
+				.orElseThrow(() -> new UserNotExistException("USer not found"));		
 		return userMapper.toUserProfile(user);
 	}
 
@@ -112,6 +112,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public void deleteUser() {
+		System.out.print("hello");
 		Authentication auth=SecurityContextHolder.getContext().getAuthentication();
 		String email=auth.getName();
          User user=userRepo.findByEmail(email)
@@ -136,7 +137,7 @@ public class UserServiceImpl implements UserService {
 		User user=userRepo.findByEmail(email)
 				.orElseThrow(() -> new UserNotExistException("User do not Exist"));
 		
-		if(!passwordEncoder.matches(request.getNewPassword(), request.getOldPassword())){
+		if(!passwordEncoder.matches(request.getOldPassword(),user.getPassword())){
 			throw new BadCredentialsException("Please provide the correct password");
 		}
 		if(request.getNewPassword()!=null) {
@@ -148,12 +149,13 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void createAuthorByUserId( User user) {
+	public User createAuthorByUserId( User user) {
 		
 		Set<Role> role=user.getRole();
 		role.add(Role.AUTHOR);
 		user.setRole(role);
-		userRepo.save(user);
+		 userRepo.save(user);
+		return user;
 	}
 
 

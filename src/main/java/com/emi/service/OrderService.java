@@ -22,6 +22,6 @@ public interface OrderService {
 	public List<ResponseOrderDto> getAllOrders();
 	public void cancelOrder(Long orderId , String email);
 	public ResponseOrderDto updateOrderStatus(Long orderId );
-	List<ResponseOrderDto> getOrdersByBookId(Long UserId);
+	List<ResponseOrderDto> getOrdersByBookId(Long UserId , String email);
 
 }

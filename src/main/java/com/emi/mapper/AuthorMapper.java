@@ -18,7 +18,7 @@ public class AuthorMapper {
 				.user(user)
 				.firstName(user.getFirstName())
 				.lastName(user.getLastName())
-				.penName(dto.getPenName())
+				.penName(dto.getPenname())
 				.bio(dto.getBio())
 				.joinedAt(LocalDateTime.now())
 				.profileURL(dto.getUrl())
@@ -30,15 +30,14 @@ public class AuthorMapper {
 		return ResponseAuthordto.builder()
 				.penName(author.getPenName())
 				.joinedAt(author.getJoinedAt())
-				.membership(author.getUser().getMembership())
+				.membership(author.getUser().getMembership().getAccessType().toString())
 				.bio(author.getBio())
-				.Role(author.getUser().getRole())
 				.build()
 				;
 	}
 
 	public void transfer(Author author, RequestAuthordto request) {
-          		author.setPenName(request.getPenName());
+          		author.setPenName(request.getPenname());
           		author.setBio(request.getBio());
           		author.setProfileURL(request.getUrl());
 	}

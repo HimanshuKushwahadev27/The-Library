@@ -20,8 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @Entity
-@Data
-@NoArgsConstructor
+@Data@NoArgsConstructor
 public class Author {
 
 	@Id

@@ -23,7 +23,7 @@ public class OrderController {
 	private final OrderService orderService;
 	
 	
-	@GetMapping("/me/{id}")
+	@GetMapping("/getOrderbyId/{id}")
 	@Operation(
 				summary="Get all order information by its id" ,
 			    description="orders endpoint"
@@ -32,7 +32,7 @@ public class OrderController {
 		return orderService.getOrderById(id);
 	}
 	
-	@GetMapping("/me")
+	@GetMapping("/getAllOrderforuser")
 	@Operation(
 				summary="Get all orders information's by its user_id" ,
 			    description="orders endpoint"
@@ -41,7 +41,7 @@ public class OrderController {
 		return orderService.getOrderByUserId(principal.getName());
 	}
 	
-	@GetMapping("/me")
+	@GetMapping("/getAllorderforAdmin")
 	@Operation(
 				summary="Get all orders informations" ,
 			    description="orders endpoint"
@@ -70,13 +70,15 @@ public class OrderController {
 	
 	
 	
-	@GetMapping("/me/{id}")
+	@GetMapping("/getAllOrderByBook/{id}")
 	@Operation(
 				summary="Get all orders informations from bookId" ,
 			    description="orders endpoint"
 			)
-	public List<ResponseOrderDto> getAllOrderForBook(@PathVariable Long id){
-		return orderService.getOrdersByBookId(id);
+	public List<ResponseOrderDto> getAllOrderForBook(
+			Principal principal,
+			@PathVariable Long id){
+		return orderService.getOrdersByBookId(id , principal.getName());
 	}
 	
 }

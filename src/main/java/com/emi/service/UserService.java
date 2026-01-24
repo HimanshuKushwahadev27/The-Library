@@ -17,6 +17,6 @@ public interface UserService {
 	public ResponseUserDto updateUser( UserUpdateRequestDto user);
 	public void deleteUser();
 	public void changePassword( PasswordUpdateRequest req);
-	void createAuthorByUserId(  User user1);
+	User createAuthorByUserId(  User user1);
 	public ResponseUserDto getUser();
 }

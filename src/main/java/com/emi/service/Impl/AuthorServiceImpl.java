@@ -41,7 +41,7 @@ public class AuthorServiceImpl implements AuthorService{
 		if(user.getRole().contains(Role.AUTHOR)) {
 			throw new IllegalStateException("User is already an Author");
 		}
-		userService.createAuthorByUserId(user);
+		user=userService.createAuthorByUserId(user);
 		Author author=authorMapper.fromUserToAuthor(user, dto);
 		return authorMapper.fromAuthorToResponse(author);
 	}
