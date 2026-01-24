@@ -18,13 +18,13 @@ public interface BookContentRepo extends JpaRepository<BookContent, Long> {
 	Optional<BookContent> findByChapterNumber(@Param("chapterNumber")Integer chapterNumber);
 
 	@Query("""
-			SELECT ALL FROM BookContent b
+			SELECT b FROM BookContent b
 			WHERE b.author.authorId = :authorId
 			""")
 	List<BookContent> findAllByAuthorId(@Param("authorId") Long authorId);
 
 	@Query("""
-			SELECT ALL FROM BookContent b
+			SELECT b FROM BookContent b
 			WHERE b.book.book_id = :book_id
 			""")
 	List<BookContent> findAllByBookId(@Param("book_id")Long book_id);

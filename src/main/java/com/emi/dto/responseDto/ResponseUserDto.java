@@ -1,6 +1,7 @@
 package com.emi.dto.responseDto;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import com.emi.entity.Membership;
 import com.emi.enums.Role;
@@ -24,7 +25,7 @@ public class ResponseUserDto {
 	
 	private String email;
 	
-	private Role role ;
+	private Set<Role> role ;
 	
 	private LocalDateTime joinedAt;
 	

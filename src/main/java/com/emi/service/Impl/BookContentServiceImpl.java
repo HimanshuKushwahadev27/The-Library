@@ -42,8 +42,8 @@ public class BookContentServiceImpl implements BookContentService {
 			throw new IllegalStateException("U cant make drafts for physical book");
 		}
 		BookContent bookContent=bookContentMapper.getBookContent(book, request);
-		book.setChapterNumber(book.getChapterNumber()+1);
 		bookContentRepo.save(bookContent);
+		book.setChapterNumber(book.getChapterNumber()+1);
 		bookRepo.save(book);
 
 		return bookContentMapper.toResponseBook(bookContent);
@@ -109,9 +109,12 @@ public class BookContentServiceImpl implements BookContentService {
 	
 	@PreAuthorize("hasRole('AUTHOR')")
 	@Override
-	public List<ResponseBookContentDto> getDraftsByAuthor(Long authorId) {
+	public List<ResponseBookContentDto> getDraftsByAuthor(String email) {
+		Author author=authorRepo.findAuthorByUserEmail(email)
+				.orElseThrow(() ->  new UserNotExistException("You are Not registered"));
+		
 		List<BookContent> info=bookContentRepo
-				                     .findAllByAuthorId(authorId);
+				                     .findAllByAuthorId(author.getAuthorId());
 	    if(info==null) {
 	    	throw new ContentNotFoundException("No drafts created by the author");
 	    }

@@ -3,15 +3,14 @@ package com.emi.service.Impl;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.emi.Repo.BookContentRepo;
 import com.emi.Repo.OrderRepo;
 import com.emi.Repo.UserRepo;
 import com.emi.dto.responseDto.ResponseUserBookContentDto;
 import com.emi.entity.User;
-import com.emi.entity.BookContent;
 import com.emi.entity.UserBookContent;
 import com.emi.enums.OrderStatus;
 import com.emi.enums.OrderType;
@@ -31,8 +30,8 @@ public class UserBookContentServiceImpl implements UserBookContentService {
 	private final UBCMapper ubcMapper;
 	private final UserRepo userRepo;
 	private final OrderRepo orderRepo;
-	private final BookContentRepo contentRepo;
 	
+	@PreAuthorize("hasRole('USER')")
 	@Transactional
 	@Override
 	public List<ResponseUserBookContentDto> purchaseSingleContent( String email, Long contentId ) {
@@ -51,6 +50,7 @@ public class UserBookContentServiceImpl implements UserBookContentService {
         return order.getPurchasedContent().stream().map(ubcMapper::toUCBDto).toList();
 	}
 
+	@PreAuthorize("hasRole('USER')")
 	@Transactional
 	@Override
 	public List<ResponseUserBookContentDto> getPurchasedContentsByUser(String email) {
@@ -67,6 +67,8 @@ public class UserBookContentServiceImpl implements UserBookContentService {
 		
 	}
 
+	
+	@PreAuthorize("hasRole('USER')")
 	@Transactional
 	@Override
 	public ResponseUserBookContentDto getUserBookContent(String email, Long contentId) {
@@ -82,6 +84,7 @@ public class UserBookContentServiceImpl implements UserBookContentService {
 		return ubcMapper.toUCBDto(ubc);
 	}
 
+	@PreAuthorize("hasRole('USER')")
 	@Transactional
 	@Override
 	public List<ResponseUserBookContentDto> purchaseMultipleContent(String email , Set<Long> request) {

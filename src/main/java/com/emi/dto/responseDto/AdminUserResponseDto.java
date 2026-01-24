@@ -1,6 +1,7 @@
 package com.emi.dto.responseDto;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import com.emi.entity.Membership;
 import com.emi.enums.Role;
@@ -25,7 +26,7 @@ public class AdminUserResponseDto {
 	private String email;
 	
 	private Membership membership;
-	private Role role;
+	private Set<Role> role;
 	
 	private boolean enabled;
 	private boolean isAccountNonLocked;

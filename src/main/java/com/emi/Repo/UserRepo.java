@@ -10,12 +10,5 @@ import com.emi.entity.User;
 public interface UserRepo extends JpaRepository<User, Long> {
 
 	Optional<User> findByEmail(String email);
-	List<User> findAll();
-	boolean existByEmail(String email);
-	
-	boolean existById(Long id);
-	
-	
-	
-	
+	List<User> findAll();		
 }

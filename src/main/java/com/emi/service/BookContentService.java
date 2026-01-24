@@ -15,7 +15,7 @@ public interface BookContentService {
 	ResponseBookContentDto publishDraft(RequestBookContentDto request  , String email);
 	
 	//get all drafts of the author
-    List<ResponseBookContentDto> getDraftsByAuthor(Long authorId);
+    List<ResponseBookContentDto> getDraftsByAuthor(String email);
     
     //get book contents by book id 
     List<ResponseBookContentDto> getContentsByBook(Long bookId);

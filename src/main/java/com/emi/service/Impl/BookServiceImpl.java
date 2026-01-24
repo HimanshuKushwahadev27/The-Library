@@ -13,13 +13,10 @@ import com.emi.dto.requestDto.RequestBookDto;
 import com.emi.dto.requestDto.RequestPhysicalBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
 import com.emi.entity.Book;
-import com.emi.enums.BookFormat;
 import com.emi.enums.BookStatus;
 import com.emi.enums.Role;
 import com.emi.exceptions.ContentNotFoundException;
-import com.emi.mapper.BookInventoryMapper;
 import com.emi.mapper.BookMapper;
-import com.emi.service.BookInventoryService;
 import com.emi.service.BookService;
 
 import lombok.RequiredArgsConstructor;

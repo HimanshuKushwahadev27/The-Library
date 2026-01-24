@@ -20,8 +20,17 @@ public interface BookRepo extends JpaRepository<Book, Long>  , JpaSpecificationE
 			""")
 	boolean findByIsbnNumber(@Param("isbn")String isbn);
 
+	@Query("""
+			SELECT b from Book b 
+			WHERE b.bookStatus = :status AND b.book_id =:bookId
+			""")
 	Optional<Book> findByIdAndStatus(BookStatus status , Long bookId);
 	
+	
+	@Query("""
+			SELECT b FROM Book b 
+			WHERE b.bookStatus = :status
+			""")
 	List<Book> findByStatus(BookStatus status);
 
 }

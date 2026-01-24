@@ -2,6 +2,7 @@ package com.emi.mapper;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,6 +13,7 @@ import com.emi.dto.responseDto.ResponseUserDto;
 import com.emi.entity.Membership;
 import com.emi.entity.User;
 import com.emi.enums.PaidAccess;
+import com.emi.enums.Role;
 
 
 @Component
@@ -28,7 +30,9 @@ public class UserMapper {
 	}
 	
 	public AdminUserResponseDto toAdminDto(User user) {
-		return AdminUserResponseDto
+		
+		Set<Role> role=user.getRole();
+		var response = AdminUserResponseDto
 				.builder()
 				.email(user.getEmail())
 				.enabled(user.isEnabled())
@@ -39,23 +43,28 @@ public class UserMapper {
 				.membership(user.getMembership())
 				.updateAt(user.getUpdatedAt())
 				.joinedAt(user.getCreatedAt())
-				.role(user.getRole())
 				.build();
+		
+		response.setRole(role);
+		return response;
 	}
 
 	public ResponseUserDto toUserProfile(User user) {
 		// TODO Auto-generated method stub
-		return ResponseUserDto
+		
+		Set<Role> role=user.getRole();
+		var response= ResponseUserDto
 				.builder()
 				.email(user.getEmail())
 				.name(Stream.of(user.getFirstName() , user.getLastName())
 						.filter(Objects::nonNull)
 						.collect(Collectors.joining(" ")))
 				.joinedAt(user.getCreatedAt())
-				.role(user.getRole())
 				.membership(user.getMembership())
 				.build()
 				;
+		response.setRole(role);
+		return response;
 	}
 	
 }

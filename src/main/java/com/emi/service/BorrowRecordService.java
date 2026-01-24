@@ -32,6 +32,10 @@ public interface BorrowRecordService {
 			String email,
 			AdminRequestBorrowRecordDto filter,
 			Pageable pageable);
+	
+	Page<AdminResponseBorrowRecordDto> getBorrowRecordsByStatusForAdmin(
+			AdminRequestBorrowRecordDto filter,
+			Pageable pageable);
 
 	
 }

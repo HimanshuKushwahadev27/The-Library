@@ -4,6 +4,7 @@ package com.emi.service.Impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
 	private final BorrowRecordRepo BRRepo;
 	private final BookRepo bookRepo;
 	
+	@PreAuthorize("hasRole('USER')")
 	@Override
 	public Page<ResponseBorrowRecordDto> getUserBorrowRecordWithStatus(String email, UserRequestBorrowRecord filter , Pageable pageable) {
 			
@@ -47,7 +49,8 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
 		return records.map(BRMapper::borrowToDto);
 	}
 
-	//Admin
+	
+	@PreAuthorize("hasRole('AUTHOR')")
 	@Override
 	public Page<AdminResponseBorrowRecordDto> getBorrowRecordsByBookId( AdminRequestBorrowRecordDto filter , Pageable pageable) {
 		
@@ -64,7 +67,7 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
 
 	}
 	
-	//Admin
+	@PreAuthorize("hasRole('ADMIN')")
 	@Override
 	public Page<AdminResponseBorrowRecordDto> getBorrowRecordsByBookIdAndStatus( AdminRequestBorrowRecordDto filter , Pageable pageable) {
 		
@@ -81,7 +84,7 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
 
 	}
 
-	//Admin
+	@PreAuthorize("hasRole('ADMIN')")
 	@Override
 	public Page<AdminResponseBorrowRecordDto> getBorrowRecordsByUserForAdmin(String email, AdminRequestBorrowRecordDto filter , Pageable pageable) {
 		
@@ -100,6 +103,8 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
 		return records.map(BRMapper::adminDto);
 
 	}
+	
+	@PreAuthorize("hasRole('USER')")
 	@Override
 	public Page<ResponseBorrowRecordDto> getUserBorrowRecord(String email , Pageable pageable) {
 		User user=userRepo.findByEmail(email)
@@ -112,6 +117,20 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
 		}
 		
 		return records.map(BRMapper::borrowToDto);
+	}
+
+
+	@Override
+	public Page<AdminResponseBorrowRecordDto> getBorrowRecordsByStatusForAdmin(
+			AdminRequestBorrowRecordDto filter,
+			Pageable pageable) {
+		
+		if(filter.getStatus()==null) {
+			throw new IllegalArgumentException("Status required foe thie query");
+		}
+		Page<BorrowRecord> records=BRRepo.findByStatus(filter.getStatus(), pageable);
+
+		return records.map(BRMapper::adminDto);
 	}
 
 }

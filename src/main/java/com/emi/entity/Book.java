@@ -38,7 +38,6 @@ import lombok.NoArgsConstructor;
 @Table(
 	indexes= {
 			 @Index(name="idx_book_status" , columnList="bookStatus"),
-			 @Index(name = "idx_book_genre", columnList = "bookgenre"),
 			 @Index(name = "idx_book_language", columnList = "bookLanguage"),
 			 @Index(name = "idx_book_digital_price", columnList = "bookPriceDigital"),
 			 @Index(name = "idx_book_physical_price", columnList = "bookPricePhysical")	}
@@ -67,7 +66,11 @@ public class Book {
 	@JoinTable(
 		name="bookgenre" ,
 		joinColumns=@JoinColumn(name ="book_id"),
-		inverseJoinColumns=@JoinColumn(name="genre_id")
+		inverseJoinColumns=@JoinColumn(name="genre_id"),
+		indexes= {
+				@Index(name="idx_book_book_id" , columnList="book_id"),
+				@Index(name="idx_book_genre_id" , columnList="genre_id")
+		}
 	)
 	@Builder.Default
 	private Set<BookGenre> genres = new HashSet<>();

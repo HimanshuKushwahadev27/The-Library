@@ -22,7 +22,6 @@ import com.emi.dto.responseDto.ResponseUserDto;
 import com.emi.entity.Membership;
 import com.emi.entity.User;
 import com.emi.enums.Role;
-import com.emi.exceptions.UserAlreadyExistsException;
 import com.emi.exceptions.UserNotExistException;
 import com.emi.mapper.UserMapper;
 import com.emi.service.UserService;
@@ -42,9 +41,11 @@ public class UserServiceImpl implements UserService {
 	@PreAuthorize("hasRole('USER')")
 	@Override
 	public void createUser(UserRegisterRequest request) {
-		if(userRepo.existByEmail(request.getEmail())) {
-			throw new UserAlreadyExistsException("Email already Exist");
-		}
+		
+		userRepo.findByEmail(request.getEmail()).ifPresent(u -> {
+			throw new IllegalArgumentException("User already exist");
+		});
+		
 		
 		Set<Role> role= new HashSet<>();
 		role.add(Role.USER);

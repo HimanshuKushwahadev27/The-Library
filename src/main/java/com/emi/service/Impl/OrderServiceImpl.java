@@ -15,8 +15,7 @@ import com.emi.Repo.BookContentRepo;
 import com.emi.Repo.BookRepo;
 import com.emi.Repo.OrderRepo;
 import com.emi.Repo.UserRepo;
-import com.emi.dto.requestDto.RequestAdminChapterQueryDto;
-import com.emi.dto.responseDto.ResponseAdminChapterQueryDto;
+
 import com.emi.dto.responseDto.ResponseOrderDto;
 import com.emi.entity.BookContent;
 import com.emi.entity.Order;
@@ -140,10 +139,6 @@ public class OrderServiceImpl implements OrderService{
 		return info.stream().map(orderMapper::orderToResponseDto).toList();
 	}
 
-	@Override
-	public List<ResponseAdminChapterQueryDto> getChapterPurchaseRecord(RequestAdminChapterQueryDto req) {
-		
-		return null;
-	}
+
 
 }

@@ -54,7 +54,7 @@ public class BorrowRecordController {
 			    ;
 	}
 	
-	@GetMapping("/borrow-records")
+	@GetMapping("/borrow-record")
 	@Operation(
 			summary="Get Borrow Records for user by admin" ,
 		    description="Admin endpoint"
@@ -79,9 +79,11 @@ public class BorrowRecordController {
 		if(request.getBookId()!=null && request.getStatus()==null ) {
 			return borrowRecordService.getBorrowRecordsByBookId( request, pageable);
 		}
-		
 		if(request.getBookId()!=null && request.getStatus()!=null) {
 			return borrowRecordService.getBorrowRecordsByBookIdAndStatus(request,pageable);
+		}
+		if(request.getBookId()==null &&request.getStatus()!=null) {
+			return borrowRecordService.getBorrowRecordsByStatusForAdmin(request, pageable);
 		}
 		
 		else{

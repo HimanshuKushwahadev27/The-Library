@@ -9,7 +9,6 @@ import com.emi.dto.requestDto.UserUpdateRequestDto;
 import com.emi.dto.responseDto.AdminUserResponseDto;
 import com.emi.dto.responseDto.ResponseUserDto;
 import com.emi.entity.User;
-import com.emi.enums.Role;
 
 public interface UserService {
 	
