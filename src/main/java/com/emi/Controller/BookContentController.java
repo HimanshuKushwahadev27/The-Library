@@ -27,7 +27,7 @@ public class BookContentController {
 	
 	@PostMapping("/create")
 	ResponseEntity<ResponseBookContentDto> createIt(
-			@Valid @RequestBody RequestBookContentDto request){
+			 @RequestBody @Valid RequestBookContentDto request){
 		return ResponseEntity.ok(service.createDraft(request));
 	}
 	

@@ -32,6 +32,7 @@ public class BookMapper {
 				.bookformat(request.getFormat())
 				.bookStatus(BookStatus.AVAILABLE)
 				.createdAt(LocalDateTime.now())
+				.chapterNumber(request.getChapterNumbers())
 				.coverImageUrl(request.getUrl())
 				.deletedAt(null)
 				.build();
