@@ -16,7 +16,7 @@ public class UBCMapper {
 	public ResponseUserBookContentDto toUCBDto(UserBookContent ubc) {
 		
 		return ResponseUserBookContentDto.builder()
-				.bookId(ubc.getContent().getBook().getBook_id())
+				.bookId(ubc.getContent().getBook().getBookid())
 				.bookTitle(ubc.getContent().getBook().getBookTitle())
 				.chapterId(ubc.getContent().getBookContent_Id())
 				.chapterTitle(ubc.getContent().getTitle())

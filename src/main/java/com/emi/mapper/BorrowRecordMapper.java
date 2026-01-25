@@ -28,7 +28,7 @@ public class BorrowRecordMapper {
 				.dueDate(record.getDueDate())
 				.returnDate(record.getReturnDate())
 				.status(record.getStatus())
-				.bookId(record.getBook().getBook_id())
+				.bookId(record.getBook().getBookid())
 				.userId(record.getUser().getUser_id())
 				.build()
 				;

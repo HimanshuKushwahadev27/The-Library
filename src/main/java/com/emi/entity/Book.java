@@ -28,11 +28,14 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(
@@ -45,8 +48,9 @@ import lombok.NoArgsConstructor;
 public class Book {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private Long book_id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="book_id")
+	private Long bookid;
 	
 	private String bookTitle;
 	
@@ -86,7 +90,7 @@ public class Book {
 	private BookStatus bookStatus;
 		
 	@ManyToOne(cascade=CascadeType.MERGE , fetch=FetchType.LAZY)
-	@JoinColumn(name = "author_id" , unique =true , nullable =false)
+	@JoinColumn(name = "author_id", nullable =false)
 	private Author bookAuthor;
 	
 	//from cloud

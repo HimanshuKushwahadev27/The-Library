@@ -1,5 +1,6 @@
 package com.emi.service.Impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import com.emi.Repo.BookRepo;
 import com.emi.dto.requestDto.BookSearchRequestDto;
 import com.emi.dto.requestDto.RequestBookDto;
 import com.emi.dto.requestDto.RequestPhysicalBookDto;
+import com.emi.dto.requestDto.UpdateRequestBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
 import com.emi.entity.Book;
 import com.emi.enums.BookStatus;
@@ -27,7 +29,6 @@ import com.emi.specification.BookSpecification;
 @Transactional
 public class BookServiceImpl implements BookService{
 
-	private final GenreServiceImpl bookGenre;
 	private final BookMapper bookMapper;
 	private final BookRepo bookRepo;
 	
@@ -36,13 +37,12 @@ public class BookServiceImpl implements BookService{
 		
 		String isbn=requestBookDto.getIsbn();
 		
-		if(bookRepo.existByIsbnNumber(isbn)) {
+		if(bookRepo.existsByIsbn(isbn)) {
 			throw new IllegalStateException("Book already exist : ");
 		}
 		
 		
 		Book book=bookMapper.toBookPhysicalDto(requestBookDto);
-		bookGenre.assignGenre(requestBookDto.getGenre(), book);
 	    return book;
 	}
 	
@@ -51,25 +51,23 @@ public class BookServiceImpl implements BookService{
 		
 		String isbn=requestBookDto.getIsbn();
 		
-		if(bookRepo.existByIsbnNumber(isbn)) {
+		if(bookRepo.existsByIsbn(isbn)) {
 			throw new IllegalStateException("Book already exist : ");
 		}
 		
 		Book book=bookMapper.toBookDto(requestBookDto);
-		bookGenre.assignGenre(requestBookDto.getGenre(), book);
 	    return book;
 	}
 
 	@Override
-	public void updateBook(Book book, RequestBookDto requestBookDto) {
+	public void updateBook(Book book, UpdateRequestBookDto requestBookDto) {
 		bookMapper.transfer(book, requestBookDto);
-		bookGenre.assignGenre(requestBookDto.getGenre(), book);
 
 	}
 
 	@Override
 	public ResponseBookDto getByBookId(Long bookId) {
-	  Book book = bookRepo.findByIdAndStatus(BookStatus.AVAILABLE , bookId)
+	  Book book = bookRepo.findByBook_IdAndStatus(BookStatus.AVAILABLE , bookId)
 			               .orElseThrow(() -> new ContentNotFoundException("Book Not found"));
 	  return bookMapper.toResponseFromBook(book);
 	}
@@ -87,7 +85,8 @@ public class BookServiceImpl implements BookService{
         Book book = bookRepo.findById(bookId).orElseThrow(() -> new ContentNotFoundException("book not found"));
 
         book.setBookStatus(BookStatus.DELETED);
-
+        book.setDeletedAt(LocalDateTime.now());
+        
 	}
 
 	@Override
@@ -113,7 +112,7 @@ public class BookServiceImpl implements BookService{
 	@Override
 	public ResponseBookDto updateBookStatus(Long bookId, BookStatus status) {
 		
-		 Book book = bookRepo.findByIdAndStatus(BookStatus.AVAILABLE , bookId)
+		 Book book = bookRepo.findByBook_IdAndStatus(BookStatus.AVAILABLE , bookId)
 	               .orElseThrow(() -> new ContentNotFoundException("Book Not found"));
 		 
 		 book.setBookStatus(status);

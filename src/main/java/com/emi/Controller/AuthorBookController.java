@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.emi.dto.requestDto.BookSearchRequestDto;
 import com.emi.dto.requestDto.RequestBookDto;
 import com.emi.dto.requestDto.RequestPhysicalBookDto;
+import com.emi.dto.requestDto.UpdateRequestBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
 import com.emi.dto.responseDto.ResponsePhysicalBookDto;
+import com.emi.dto.responseDto.UpdateBookResponseDto;
 import com.emi.service.AuthorBookService;
 
 import jakarta.validation.Valid;
@@ -55,8 +57,8 @@ public class AuthorBookController {
 	}
 	
 	@PutMapping("/bookU")
-	public ResponseEntity<ResponseBookDto> updateBook(
-			@RequestBody @Valid RequestBookDto req 
+	public ResponseEntity<UpdateBookResponseDto> updateBook(
+			@RequestBody @Valid UpdateRequestBookDto req 
 			,Long id
 			,Principal principal){
 		

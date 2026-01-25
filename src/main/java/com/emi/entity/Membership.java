@@ -17,10 +17,14 @@ import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
@@ -48,6 +52,7 @@ public class Membership {
 	//optional ensures that every user must always have membership
 	@OneToOne(cascade=CascadeType.PERSIST , fetch=FetchType.LAZY , optional = false)
 	@JoinColumn(name = "user_id")
+
 	private User user;
 	
 	

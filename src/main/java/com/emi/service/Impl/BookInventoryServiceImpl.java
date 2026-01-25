@@ -47,7 +47,7 @@ public class BookInventoryServiceImpl implements BookInventoryService {
 			throw new IllegalStateException("Book is ony available in digital format");
 		}
 		
-		BookInventory bookInv=bookInventoryRepo.findByBookId(bookId);
+		BookInventory bookInv=bookInventoryRepo.findByBook_Id(bookId);
 		
 		bookInv.setTotalCopies(bookInv.getTotalCopies()+totalCopies);
 		bookInventoryRepo.save(bookInv);
@@ -64,7 +64,7 @@ public class BookInventoryServiceImpl implements BookInventoryService {
 			throw new IllegalStateException("Book is ony available in digital format");
 		}
 		
-		BookInventory bookInv=bookInventoryRepo.findByBookId(bookId);
+		BookInventory bookInv=bookInventoryRepo.findByBook_Id(bookId);
 		return bookInventoryMapper.toResponseDto(bookInv);	
 	}
 
@@ -78,7 +78,7 @@ public class BookInventoryServiceImpl implements BookInventoryService {
 			throw new IllegalStateException("Book is ony available in digital format");
 		}
 		
-		BookInventory bookInv=bookInventoryRepo.findByBookId(bookId);
+		BookInventory bookInv=bookInventoryRepo.findByBook_Id(bookId);
 		
 		bookInv.setAvailableCopies(bookInv.getAvailableCopies()+amt);
 		return bookInventoryMapper.toResponseDto(bookInv);
@@ -94,8 +94,8 @@ public class BookInventoryServiceImpl implements BookInventoryService {
 			throw new IllegalStateException("Book is ony available in digital format");
 		}
 		
-		BookInventory bookInv=bookInventoryRepo.findByBookId(bookId);
-		if(amt<bookInv.getAvailableCopies()) {
+		BookInventory bookInv=bookInventoryRepo.findByBook_Id(bookId);
+		if(amt>bookInv.getAvailableCopies()) {
 			throw new IllegalStateException("The selected amount is not available please decrease it ");
 		}
 		bookInv.setAvailableCopies(bookInv.getAvailableCopies()-amt);

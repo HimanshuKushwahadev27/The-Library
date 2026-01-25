@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import com.emi.dto.requestDto.BookSearchRequestDto;
 import com.emi.dto.requestDto.RequestBookDto;
 import com.emi.dto.requestDto.RequestPhysicalBookDto;
+import com.emi.dto.requestDto.UpdateRequestBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
 import com.emi.entity.Book;
 import com.emi.enums.BookStatus;
@@ -18,7 +19,7 @@ public interface BookService {
 	Book createBookPhysical(RequestPhysicalBookDto requestBookDto);
 	
 	//admin
-	void updateBook(Book book , RequestBookDto requestBookDto);
+	void updateBook(Book book , UpdateRequestBookDto requestBookDto);
 	
 	ResponseBookDto getByBookId(Long bookId);
 	

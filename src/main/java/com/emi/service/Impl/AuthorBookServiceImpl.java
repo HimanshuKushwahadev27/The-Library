@@ -14,8 +14,10 @@ import com.emi.Repo.BookRepo;
 import com.emi.dto.requestDto.BookSearchRequestDto;
 import com.emi.dto.requestDto.RequestBookDto;
 import com.emi.dto.requestDto.RequestPhysicalBookDto;
+import com.emi.dto.requestDto.UpdateRequestBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
 import com.emi.dto.responseDto.ResponsePhysicalBookDto;
+import com.emi.dto.responseDto.UpdateBookResponseDto;
 import com.emi.entity.Author;
 import com.emi.entity.Book;
 import com.emi.enums.BookStatus;
@@ -37,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class AuthorBookServiceImpl implements AuthorBookService {
 
-	
+	private final GenreServiceImpl bookGenre;
 	private final AuthorRepo authorRepo;
 	private final BookService bookService;
 	private final BookRepo bookRepo;
@@ -58,6 +60,8 @@ public class AuthorBookServiceImpl implements AuthorBookService {
 		
 		book.setBookAuthor(author);
 		bookRepo.save(book);
+		bookGenre.assignGenre(request.getGenre(), book);
+
 		BookInventory bookInv=bookInventoryService
 				.createInventory(bookInventoryMapper
 						.getBasicInventory(), book);
@@ -80,14 +84,15 @@ public class AuthorBookServiceImpl implements AuthorBookService {
 		
 		
 		book.setBookAuthor(author);
-		bookRepo.save(book);
+		book=bookRepo.save(book);
+		bookGenre.assignGenre(request.getGenre(), book);
 		
-		return bookMapper.toResponseFromBook(book);
+		return bookMapper.toResponseFromBook(book ,request);
 	}
 	
 	@PreAuthorize("hasRole('AUTHOR')")
 	@Override
-	public ResponseBookDto updateBookByAuthor(String email, RequestBookDto requestBookDto, Long bookId) {
+	public UpdateBookResponseDto updateBookByAuthor(String email, UpdateRequestBookDto requestBookDto, Long bookId) {
 		
 		Book book = bookRepo.findById(bookId).orElseThrow(() -> new ContentNotFoundException("book not found"));
 		
@@ -103,8 +108,9 @@ public class AuthorBookServiceImpl implements AuthorBookService {
 		}
 			
 		bookService.updateBook(book, requestBookDto);
+		bookGenre.assignGenre(requestBookDto.getGenre(), book);
 		
-		return bookMapper.toResponseFromBook(book);
+		return bookMapper.toResponseUpdateFromBook(book , requestBookDto);
 	}
 
 	@PreAuthorize("hasRole('AUTHOR')")

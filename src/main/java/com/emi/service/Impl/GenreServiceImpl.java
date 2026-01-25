@@ -23,15 +23,26 @@ public class GenreServiceImpl {
 
 	    Set<BookGenre> genres = new HashSet<>();
 
+
+	    
+	    
 	    for (String t : types) {
 	        BookGenre genre = bookGenreRepo.findByName(t)
 	                .orElseThrow(() ->
 	                        new IllegalArgumentException("Genre not found: " + t)
 	                );
 	        genres.add(genre);
+
 	    }
 
-	    book.setGenres(genres);
+	    book.getGenres().clear();
+	    book.getGenres().addAll(genres);
+	    
+	    
+	    for (BookGenre g : genres) {
+	        g.getBooks().add(book);
+	    }
+	    
 	    return genres;
 	}
 

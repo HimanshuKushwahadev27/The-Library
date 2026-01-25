@@ -29,7 +29,7 @@ public interface BorrowRecordRepo extends JpaRepository<BorrowRecord, Long> {
     
 	@Query("""
 			SELECT b FROM BorrowRecord b
-			WHERE b.book.book_id= :bookId
+			WHERE b.book.bookid= :bookId
 			""")
     Page<BorrowRecord> findByBook_Id(
     		Long bookId,
@@ -37,7 +37,7 @@ public interface BorrowRecordRepo extends JpaRepository<BorrowRecord, Long> {
 
 	@Query("""
 			SELECT b FROM BorrowRecord b
-			WHERE b.book.book_id= :bookId AND b.status = :status
+			WHERE b.book.bookid= :bookId AND b.status = :status
 			""")
 	Page<BorrowRecord> findByBook_IdAndStatus(
 			Long bookId,
@@ -46,7 +46,7 @@ public interface BorrowRecordRepo extends JpaRepository<BorrowRecord, Long> {
 
 	@Query("""
 			SELECT b FROM BorrowRecord b
-			WHERE b.user.user_id= :userId AND b.book.book_id= :bookId
+			WHERE b.user.user_id= :userId AND b.book.bookid= :bookId
 			""")
 	Page<BorrowRecord> findByBook_IdAndUser(
 			Long bookId,

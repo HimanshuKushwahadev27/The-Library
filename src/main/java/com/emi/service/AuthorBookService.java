@@ -6,15 +6,17 @@ import org.springframework.data.domain.Pageable;
 import com.emi.dto.requestDto.BookSearchRequestDto;
 import com.emi.dto.requestDto.RequestBookDto;
 import com.emi.dto.requestDto.RequestPhysicalBookDto;
+import com.emi.dto.requestDto.UpdateRequestBookDto;
 import com.emi.dto.responseDto.ResponseBookDto;
 import com.emi.dto.responseDto.ResponsePhysicalBookDto;
+import com.emi.dto.responseDto.UpdateBookResponseDto;
 import com.emi.enums.BookStatus;
 
 public interface AuthorBookService {
 
 	ResponsePhysicalBookDto createPhysicalBookByAuthor(String email,RequestPhysicalBookDto request);
 
-	ResponseBookDto updateBookByAuthor(String email, RequestBookDto requestBookDto , Long id);
+	UpdateBookResponseDto updateBookByAuthor(String email, UpdateRequestBookDto requestBookDto , Long id);
 	
 	void deleteBookByauthor(Long bookId , String email);
 	

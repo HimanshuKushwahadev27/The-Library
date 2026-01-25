@@ -23,7 +23,7 @@ public class BookInventoryMapper {
 		
 		return ResponseBookInventoryDto
 				.builder()
-				.bookId(req.getBook().getBook_id())
+				.bookId(req.getBook().getBookid())
 				.bookTitle(req.getBook().getBookTitle())
 				.totalCopies(req.getTotalCopies())
 				.availableCopies(req.getAvailableCopies())

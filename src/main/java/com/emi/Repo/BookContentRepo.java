@@ -25,7 +25,7 @@ public interface BookContentRepo extends JpaRepository<BookContent, Long> {
 
 	@Query("""
 			SELECT b FROM BookContent b
-			WHERE b.book.book_id = :book_id
+			WHERE b.book.bookid = :book_id
 			""")
 	List<BookContent> findAllByBookId(@Param("book_id")Long book_id);
 

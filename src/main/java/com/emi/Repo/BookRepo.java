@@ -14,17 +14,14 @@ import com.emi.enums.BookStatus;
 
 public interface BookRepo extends JpaRepository<Book, Long>  , JpaSpecificationExecutor<Book>{
 
-	@Query("""
-			SELECT b FROM Book b
-			WHERE b.isbn = :isbn
-			""")
-	boolean existByIsbnNumber(@Param("isbn")String isbn);
+
+	boolean existsByIsbn(String isbn);
 
 	@Query("""
 			SELECT b from Book b 
-			WHERE b.bookStatus = :status AND b.book_id =:bookId
+			WHERE b.bookStatus = :status AND b.bookid =:bookId
 			""")
-	Optional<Book> findByIdAndStatus(BookStatus status , Long bookId);
+	Optional<Book> findByBook_IdAndStatus(@Param("status")BookStatus status ,@Param("bookId") Long bookId);
 	
 	
 	@Query("""

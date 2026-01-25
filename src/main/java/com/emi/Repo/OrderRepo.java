@@ -14,15 +14,15 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
 
 	@Query("""
 			SELECT ubc FROM Order o JOIN o.purchasedContent ubc 
-			WHERE ubc.user.id=:userId
+			WHERE ubc.user.user_id=:userId
 			""")
 	Set<UserBookContent> findAllPurchaseContentViaOrder(@Param("userId") Long userId);
 	
 	
 	@Query("""
 		   SELECT ubc FROM Order o JOIN o.purchasedContent ubc 
-			WHERE ubc.user.id=:userId
-			AND ubc.content.id=:contentId
+			WHERE ubc.user.user_id=:userId
+			AND ubc.content.bookContent_Id=:contentId
 		""")
 	UserBookContent findByUserIdAndContentId(
 		        @Param("userId") Long userId,
@@ -31,7 +31,7 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
 	
 	@Query("""
 			SELECT o FROM Order o
-			WHERE o.user.id = :userId
+			WHERE o.user.user_id = :userId
 			""")
 	List<Order> findAllOrderByUserId(@Param("userId") Long userId);
 		
@@ -40,7 +40,7 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
 			SELECT DISTINCT o FROM Order o
 			JOIN o.purchasedContent ubc
 			JOIN ubc.content bc
-			WHERE bc.book.id = :bookId
+			WHERE bc.book.bookid = :bookId
 			""")
 	List<Order> findAllOrderByBookId(@Param("bookId") Long bookId);
 }
