@@ -1,5 +1,6 @@
 package com.emi.service.Impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -46,8 +47,9 @@ public class UserBookContentServiceImpl implements UserBookContentService {
                                user,
                                Set.of(contentId)
                                );
-                               
-        return order.getPurchasedContent().stream().map(ubcMapper::toUCBDto).toList();
+		orderRepo.saveAndFlush(order);
+		List<UserBookContent> snapshot=new ArrayList<>(order.getPurchasedContent());
+        return snapshot.stream().map(ubcMapper::toUCBDto).toList();
 	}
 
 	@PreAuthorize("hasRole('USER')")

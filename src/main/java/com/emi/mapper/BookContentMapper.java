@@ -36,6 +36,7 @@ public class BookContentMapper {
 				.chapterNumber(req.getChapterNumber())
 				.cloudUrl("Not assigned")
 				.title(req.getTitle())
+				.price(req.getPrice())
 				.createdAt(req.getCreatedAt())
 				.draft(req.isDraft())
 				.build()

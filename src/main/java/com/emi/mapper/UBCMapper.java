@@ -35,7 +35,6 @@ public class UBCMapper {
 				.itemPrice(content.getPrice())
 				 .purchasedDate(LocalDateTime.now())
 				 .status(OrderStatus.PLACED)
-				 .order(order)
 				 .build();
 	}
 }

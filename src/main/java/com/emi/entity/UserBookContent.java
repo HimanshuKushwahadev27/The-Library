@@ -57,5 +57,18 @@ public class UserBookContent {
     
     private LocalDateTime purchasedDate;
     
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserBookContent)) return false;
+        UserBookContent that = (UserBookContent) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+    
     
 }

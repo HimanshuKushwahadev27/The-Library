@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.emi.entity.UserBookContent;
 import com.emi.Repo.AuthorRepo;
 import com.emi.Repo.BookContentRepo;
 import com.emi.Repo.BookRepo;
@@ -23,6 +22,7 @@ import com.emi.entity.Book;
 import com.emi.entity.BookContent;
 import com.emi.entity.Order;
 import com.emi.entity.User;
+import com.emi.entity.UserBookContent;
 import com.emi.enums.OrderStatus;
 import com.emi.enums.OrderType;
 import com.emi.enums.Role;
@@ -59,23 +59,25 @@ public class OrderServiceImpl implements OrderService{
 		order.setStatus(status);
 	    order.setOrdertype(type);
 	    order.setUser(user);
-	    orderRepo.save(order);
 	    
-	   
+	    Set<UserBookContent> contents = new HashSet<>();
+	    List<BookContent> content = bookContentRepo.findAllById(chapters);
+
 		
 	    BigDecimal price=new BigDecimal(0.00);
-	    Set<UserBookContent> store=new HashSet<>();
-		for(Long id : chapters) {
-			 BookContent  con=bookContentRepo.findById(id)
-					       .orElseThrow(() -> new ContentNotFoundException("Chapter not found"));
-			 
+		for(BookContent con : content) {
+			
 			 var ubc=ubcMapper.toUBCfromBC(con, order);
 			 ubc.setUser(user);
+			 ubc.setItemPrice(con.getPrice());
+			 contents.add(ubc);
 			 price=price.add(ubc.getItemPrice());
-			 order.addPurchasedContent(ubc);
-			 store.add(ubc);
 		}
+		
+		contents.forEach(order::addPurchasedContent);
+		
 		order.setTotalAmt(price);
+	    orderRepo.save(order);
 		return order;
 	}
 
