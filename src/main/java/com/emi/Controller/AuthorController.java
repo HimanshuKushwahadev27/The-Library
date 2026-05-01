@@ -23,7 +23,7 @@ public class AuthorController {
 
 	private final AuthorService authorService;
 	
-	@PostMapping(value="/register" , consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value="/register" )
 	
 	public ResponseEntity<ResponseAuthordto> beAnAuthor(
 			Principal principal
